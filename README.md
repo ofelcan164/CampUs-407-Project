@@ -1,7 +1,5 @@
-# CampUs-407-Project
-============================================
+# CampUs
 
-Title: CampUs
 Oscar Felcan, felcan@wisc.edu, ofelcan164
 Collin Krause, cpkrause2@wisc.edu, ckkrause
 Katie Korth, kmkorth2@wisc.edu, katiekorth
