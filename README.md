@@ -1,20 +1,20 @@
 # CampUs
 
-Oscar Felcan, felcan@wisc.edu, ofelcan164
-Collin Krause, cpkrause2@wisc.edu, ckkrause
-Katie Korth, kmkorth2@wisc.edu, katiekorth
+Oscar Felcan, felcan@wisc.edu, ofelcan164  
+Collin Krause, cpkrause2@wisc.edu, ckkrause  
+Katie Korth, kmkorth2@wisc.edu, katiekorth  
 
-###Introduction
+### Introduction
 At the moment, it can be quite difficult to connect with other students on campus, particularly freshmen who may not know anyone. Social interaction is a very important part of many individuals lives and is something many people have lacked coming off the year of the pandemic. Hopefully CampUs would help to address this issue by creating an interactive, yet small-scale community. Using our app, students at UW-Madison can interact, connect, and meet with other students living in the same dorm, apartment, house, or community. Additionally, it can be challenging to juggle different technology platforms when trying to interact with this community. Whether it be selling/buying, skimming help wanted sections, or keeping an eye out for local events and alerts, typically a user would have to use several different apps and platforms. With CampUs, we would combine all of these elements together, along with a social aspect, into one singular application. 
 The main idea is to allow students to connect with other students in their area. Whether that be to make friends and meet new people, to exchange goods, or to post and talk about what is going on in their lives/area. We want students at UW-Madison to connect with each other in an easy and safe manner. Additionally, we want to allow users to change the scope of the area they are connecting with. Imagine scrolling through a social feed for your apartment building, and then searching for a place to eat in your neighborhood, and then connecting with a student across campus to sell your football ticket. With how disconnected we all have become over the last year, we believe that students are looking for something exactly like CampUs  to help them reconnect them with others on campus. 
 We are aiming for CampUs to be primarily used by UW-Madison students living on or near the campus. While this type of community connecting technology could be relevant to many different demographics, we believe that students at Madison would benefit the most from these features. Additionally, as we build out CampUs, we have the perfect opportunity to interact and survey our fellow students in order to gain their insights into how we can improve.
 
-###Competition
+### Competition
 Similar apps exist in the marketplace at the moment such as Nextdoor, YikYak, and Facebook. In our experience Nextdoor and Facebook are geared towards older demographic groups, whereas our app would create a space for UW-Madison students to interact with one another. YikYak, on the other hand, focuses on anonymity whereas our app is meant for quite the opposite reason: fostering and bolstering the UW-Madison community. In essence, our app will combine the apps mentioned above , providing a more general functionality for a more niche use case and user base. Our app will appeal to students because it is exclusive to users with “wisc.edu” emails. Students will be able to buy and sell tickets, make friends, find events, and connect to one another without having to worry about “stranger danger”, or other people that might scam them.
 Main modules
 Consequently, our app will make important use of location services, camera functionality, and some form of user account tracking and storing with potentially an authentication system through the UW portal. There will also need to be a database of some kind storing data that users post to our app. For example, posts about events, a post about someone wanting to sell their couch, or just general social media style posts and pictures. Down the line, implementing some form of AR functionality allowing users to see posts or users that exist at a certain location through an AR medium would be incredible.
 
-###Mobile “Innovation”
+### Mobile “Innovation”
 Finally, one of the key innovations our app possesses would be the ability for users to specify whether they would like to view the app’s feed based on a saved location or their current location. This would allow for a far more dynamic yet localized feel to the app and really hone in on the main goal of the app. Thus, neighborhoods, dorm or apartment buildings, or potentially even all of campus would have its own, individual view of the app. In addition, this functionality could be combined with AR, providing an extremely interactive experience for a user living on campus and a medium in which students could really connect to the communities they now exist in.
 Mobile Device Access
 We have access to a single Pixel 2 XL device which we will run testing on along with the emulator built in to Android Studio.
