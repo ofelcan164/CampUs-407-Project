@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
+        android:inputType="textPassword"
         android:backgroundTint="@color/red_1"
         android:fontFamily="sans-serif-black"
         android:hint="Password"
