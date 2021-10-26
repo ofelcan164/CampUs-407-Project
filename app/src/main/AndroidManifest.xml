@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampUs">
         <activity
+            android:name=".CreateProfile"
+            android:exported="false" />
+        <activity
             android:name=".SignIn"
             android:exported="true">
             <intent-filter>
