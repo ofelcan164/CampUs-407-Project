@@ -12,5 +12,5 @@ public class SignIn extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    // CK test changes
+    // CK test change
 }
