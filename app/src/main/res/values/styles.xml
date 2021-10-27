@@ -9,6 +9,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif-black</item>
         <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">6dp</item>
     </style>
 
     <style name="GenEditTxt" parent="TextAppearance.AppCompat">
