@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampUs">
         <activity
+            android:name=".MainFeedsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main_feeds" />
+        <activity
             android:name=".SocialFeed"
             android:exported="false"
             android:label="@string/title_activity_social_feed"
