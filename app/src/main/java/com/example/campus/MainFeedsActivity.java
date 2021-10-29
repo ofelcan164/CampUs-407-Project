@@ -133,9 +133,9 @@ public class MainFeedsActivity extends AppCompatActivity {
                     // }
                     break;
                 case R.id.profile_option:
-                    // if (!(curFrag instanceof ProfileFragment)) {
-                       // curFrag = new ProfileFragment();
-                    // }
+                     if (!(curFrag instanceof ProfileFragment)) {
+                        curFrag = new ProfileFragment();
+                     }
                     break;
             }
 

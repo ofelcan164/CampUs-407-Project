@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateProfile">
+    tools:context=".EditProfileActivity">
 
     <TextView
-        android:id="@+id/major_text_create"
+        android:id="@+id/major_text_edit_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,11 +17,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/year_text_create"
+        app:layout_constraintTop_toBottomOf="@+id/year_text_edit_profile"
         app:layout_constraintVertical_bias="0.05" />
 
     <TextView
-        android:id="@+id/phone_text_create"
+        android:id="@+id/phone_text_edit_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,26 +31,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/major_text_create"
+        app:layout_constraintTop_toBottomOf="@+id/major_text_edit_profile"
         app:layout_constraintVertical_bias="0.05" />
 
     <Button
-        android:id="@+id/create"
+        android:id="@+id/save_profile"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:text="Create"
+        android:text="Save"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_confirm"
+        app:layout_constraintTop_toBottomOf="@+id/password_confirm_edit_profile"
         app:layout_constraintVertical_bias="0.25" />
 
     <Button
-        android:id="@+id/create_cancel"
+        android:id="@+id/edit_profile_cancel"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,15 +61,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_confirm"
+        app:layout_constraintTop_toBottomOf="@+id/password_confirm_edit_profile"
         app:layout_constraintVertical_bias="0.25" />
 
     <Button
-        android:id="@+id/add_profile_picture"
+        android:id="@+id/edit_profile_picture"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Profile Photo"
+        android:text="Edit Profile Photo"
         android:textSize="10dp"
         app:cornerRadius="20dp"
         app:icon="@drawable/add_profile_pic"
@@ -83,7 +83,7 @@
         app:layout_constraintVertical_bias="0.050000012" />
 
     <TextView
-        android:id="@+id/email_text_create"
+        android:id="@+id/email_text_edit_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,11 +93,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_profile_picture"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_picture"
         app:layout_constraintVertical_bias="0.10" />
 
     <EditText
-        android:id="@+id/email_edit_create"
+        android:id="@+id/email_edit_edit_profile"
         style="@style/GenEditTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -105,13 +105,13 @@
         android:layout_marginEnd="20dp"
         android:hint="Student Email"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/email_text_create"
+        app:layout_constraintBottom_toBottomOf="@+id/email_text_edit_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/email_text_create"
-        app:layout_constraintTop_toTopOf="@+id/email_text_create" />
+        app:layout_constraintStart_toEndOf="@+id/email_text_edit_profile"
+        app:layout_constraintTop_toTopOf="@+id/email_text_edit_profile" />
 
     <EditText
-        android:id="@+id/year_edit_create"
+        android:id="@+id/year_edit_edit_profile"
         style="@style/GenEditTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -119,13 +119,13 @@
         android:layout_marginEnd="20dp"
         android:hint="Year in School"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/year_text_create"
+        app:layout_constraintBottom_toBottomOf="@+id/year_text_edit_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/year_text_create"
-        app:layout_constraintTop_toTopOf="@+id/year_text_create" />
+        app:layout_constraintStart_toEndOf="@+id/year_text_edit_profile"
+        app:layout_constraintTop_toTopOf="@+id/year_text_edit_profile" />
 
     <EditText
-        android:id="@+id/major_edit_create"
+        android:id="@+id/major_edit_edit_profile"
         style="@style/GenEditTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -133,13 +133,13 @@
         android:layout_marginEnd="20dp"
         android:hint="Major"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/major_text_create"
+        app:layout_constraintBottom_toBottomOf="@+id/major_text_edit_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/major_text_create"
-        app:layout_constraintTop_toTopOf="@+id/major_text_create" />
+        app:layout_constraintStart_toEndOf="@+id/major_text_edit_profile"
+        app:layout_constraintTop_toTopOf="@+id/major_text_edit_profile" />
 
     <EditText
-        android:id="@+id/phone_edit_create"
+        android:id="@+id/phone_edit_edit_profile"
         style="@style/GenEditTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -147,13 +147,13 @@
         android:layout_marginEnd="20dp"
         android:hint="Phone Number"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/phone_text_create"
+        app:layout_constraintBottom_toBottomOf="@+id/phone_text_edit_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/phone_text_create"
-        app:layout_constraintTop_toTopOf="@+id/phone_text_create" />
+        app:layout_constraintStart_toEndOf="@+id/phone_text_edit_profile"
+        app:layout_constraintTop_toTopOf="@+id/phone_text_edit_profile" />
 
     <TextView
-        android:id="@+id/year_text_create"
+        android:id="@+id/year_text_edit_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -163,11 +163,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_text_create"
+        app:layout_constraintTop_toBottomOf="@+id/email_text_edit_profile"
         app:layout_constraintVertical_bias="0.05" />
 
     <EditText
-        android:id="@+id/password_confirm"
+        android:id="@+id/password_confirm_edit_profile"
         style="@style/GenEditTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -178,11 +178,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_create"
+        app:layout_constraintTop_toBottomOf="@+id/password_create_edit_profile"
         app:layout_constraintVertical_bias="0.008" />
 
     <EditText
-        android:id="@+id/password_create"
+        android:id="@+id/password_create_edit_profile"
         style="@style/GenEditTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -193,21 +193,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enter_pass_text_create"
+        app:layout_constraintTop_toBottomOf="@+id/change_pass_text_edit_profile"
         app:layout_constraintVertical_bias="0.003" />
 
     <TextView
-        android:id="@+id/enter_pass_text_create"
+        android:id="@+id/change_pass_text_edit_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter Pasword:"
+        android:text="Change Pasword:"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone_edit_create"
+        app:layout_constraintTop_toBottomOf="@+id/phone_edit_edit_profile"
         app:layout_constraintVertical_bias="0.100000024" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
