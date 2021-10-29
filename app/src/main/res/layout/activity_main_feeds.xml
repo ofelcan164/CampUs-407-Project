@@ -13,18 +13,14 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavView"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        app:itemTextAppearanceActive="@style/GenText"
+        app:itemTextAppearanceInactive="@style/GenText"
+        app:itemTextColor="@color/white"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
-
-    <!-- TODO-->
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/bottomnav"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:background="?android:attr/windowBackground"-->
-<!--        app:menu="@menu/menu" />-->
 
 </RelativeLayout>
