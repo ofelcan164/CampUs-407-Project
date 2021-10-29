@@ -22,6 +22,7 @@ public class SignIn extends AppCompatActivity {
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                signInClicked();
             }
         });
 
@@ -36,6 +37,12 @@ public class SignIn extends AppCompatActivity {
 
     public void createProfileClicked() {
         Intent intent = new Intent(this, CreateProfile.class);
+        startActivity(intent);
+    }
+
+    public void signInClicked() {
+        // TODO NOT REALLY WHAT WILL HAPPEN
+        Intent intent = new Intent(this, MainFeedsActivity.class);
         startActivity(intent);
     }
 }
