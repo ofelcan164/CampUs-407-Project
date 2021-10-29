@@ -40,6 +40,7 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     public void createClicked() {
+        // TODO NOT REALLY WHAT WILL HAPPEN
         Intent intent = new Intent(this, SignIn.class);
         startActivity(intent);
     }
