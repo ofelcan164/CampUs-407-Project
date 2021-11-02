@@ -38,7 +38,7 @@ public class MainFeedsActivity extends AppCompatActivity {
     private Fragment curFrag;
 
     /**
-     * When permsisison for location services is requested
+     * When permission for location services is requested
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -128,9 +128,9 @@ public class MainFeedsActivity extends AppCompatActivity {
                     // }
                     break;
                 case R.id.alert_option:
-                    // if (!(curFrag instanceof AlertFragment)) {
-                        // curFrag = new AlertFragment();
-                    // }
+                     if (!(curFrag instanceof AlertFragment)) {
+                         curFrag = new AlertFragment();
+                     }
                     break;
                 case R.id.profile_option:
                      if (!(curFrag instanceof ProfileFragment)) {

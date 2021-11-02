@@ -46,5 +46,4 @@ public class SignIn extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // CK test changes
 }
