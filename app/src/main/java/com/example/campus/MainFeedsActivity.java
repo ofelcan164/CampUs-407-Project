@@ -38,7 +38,7 @@ public class MainFeedsActivity extends AppCompatActivity {
     private Fragment curFrag;
 
     /**
-     * When permsisison for location services is requested
+     * When permission for location services is requested
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
