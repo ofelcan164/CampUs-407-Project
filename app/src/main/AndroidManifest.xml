@@ -14,6 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampUs">
         <activity
+            android:name=".CreateNewAlertPost"
+            android:exported="true" />
+        <activity
+            android:name=".CreateNewMarketPost"
+            android:exported="true" />
+        <activity
+            android:name=".CreateNewSocialPost"
+            android:exported="true" />
+        <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
