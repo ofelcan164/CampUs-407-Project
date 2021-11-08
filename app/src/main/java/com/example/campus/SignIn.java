@@ -45,4 +45,5 @@ public class SignIn extends AppCompatActivity {
         Intent intent = new Intent(this, MainFeedsActivity.class);
         startActivity(intent);
     }
+
 }

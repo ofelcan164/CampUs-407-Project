@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/newSocialPost"
+        android:title="New Social Post" />
+
+    <item
+        android:id="@+id/newMarketSale"
+        android:title="New Market Sale" />
+
+    <item
+        android:id="@+id/newAlert"
+        android:title="New Alert" />
+
+</menu>
