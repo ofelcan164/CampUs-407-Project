@@ -50,7 +50,7 @@ public class MainFeedsActivity extends AppCompatActivity {
     }
 
     /**
-     * Assign the LocationManager (when permission is granted
+     * Assign the LocationManager (when permission is granted)
      */
     public void startListening() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
