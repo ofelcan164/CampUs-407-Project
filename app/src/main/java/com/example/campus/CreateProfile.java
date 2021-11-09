@@ -2,31 +2,41 @@ package com.example.campus;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class CreateProfile extends AppCompatActivity {
 
-    Button cancel_btn;
-    Button create_btn;
+    // Private fields
+    private Button cancelBtn;
+    private Button createBtn;
+
+    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
 
-        cancel_btn = (Button) findViewById(R.id.create_cancel);
-        cancel_btn.setOnClickListener(new View.OnClickListener() {
+        sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
+
+        cancelBtn = (Button) findViewById(R.id.create_cancel);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createCancelClicked();
             }
         });
 
-        create_btn = (Button) findViewById(R.id.create);
-        create_btn.setOnClickListener(new View.OnClickListener() {
+        createBtn = (Button) findViewById(R.id.create);
+        createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createClicked();
@@ -41,7 +51,32 @@ public class CreateProfile extends AppCompatActivity {
 
     public void createClicked() {
         // TODO NOT REALLY WHAT WILL HAPPEN
-        Intent intent = new Intent(this, SignIn.class);
-        startActivity(intent);
+        EditText email = (EditText) findViewById(R.id.email_edit_create);
+        if (email.getText().toString().indexOf("@wisc.edu") == -1) {
+            Context context = getApplicationContext();
+            Toast toast = Toast.makeText(context, "Must enter a wisc.edu email", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        String username = email.getText().toString().substring(0, email.getText().toString().indexOf("@wisc.edu")); // TODO
+        EditText passwordEnter = (EditText) findViewById(R.id.password_create);
+        EditText passwordConfirm = (EditText) findViewById(R.id.password_confirm);
+
+        if (!passwordEnter.getText().toString().equals(passwordConfirm.getText().toString())) {
+            Context context = getApplicationContext();
+            Toast toast = Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else {
+            // Check against DB, if valid user then TODO
+            // Save username and password to SharedPreferences
+            sharedPreferences.edit().putString("username", username).apply();
+            sharedPreferences.edit().putString("password", passwordEnter.getText().toString()).apply();
+            Intent intent = new Intent(this, MainFeedsActivity.class);
+            Context context = getApplicationContext();
+            Toast toast = Toast.makeText(context, String.format("New profile, %s, created!", username), Toast.LENGTH_LONG);
+            toast.show();
+            startActivity(intent);
+        }
     }
 }

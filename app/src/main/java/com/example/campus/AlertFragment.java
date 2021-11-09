@@ -66,8 +66,6 @@ public class AlertFragment extends Fragment {
             }
         });
 
-
-
         //Return fragment view
         return v;
     }

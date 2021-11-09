@@ -108,7 +108,7 @@ public class MainFeedsActivity extends AppCompatActivity {
         curFrag = new SocialFeedFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, curFrag).commit();
 
-        bottomNavigationView = findViewById(R.id.bottomNavView);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
         bottomNavigationView.setOnItemSelectedListener(bottomnavFunction);
     }
 
