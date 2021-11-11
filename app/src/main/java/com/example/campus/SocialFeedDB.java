@@ -5,6 +5,7 @@ public class SocialFeedDB {
     private String username;
     private String postContent;
     private String dateTime;
+    // Need a location posted from? TODO
 
     public SocialFeedDB(String username, String postContent, String dateTime) {
         this.username = username;
