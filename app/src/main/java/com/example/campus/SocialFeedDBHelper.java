@@ -20,6 +20,7 @@ public class SocialFeedDBHelper {
 
     public ArrayList<SocialFeedDB> readSocialPosts() {
         createTable();
+        // Will change this to be only in a certain location range? TODO
         Cursor c = sqLiteDatabase.rawQuery(String.format("SELECT * from socialFeed"), null);
 
         int dateTimeIndex = c.getColumnIndex("dateTime");
