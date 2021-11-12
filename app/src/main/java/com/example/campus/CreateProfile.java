@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -69,14 +70,30 @@ public class CreateProfile extends AppCompatActivity {
         }
         else {
             // Check against DB, if valid user then TODO
-            // Save username and password to SharedPreferences
-            sharedPreferences.edit().putString("username", username).apply();
-            sharedPreferences.edit().putString("password", passwordEnter.getText().toString()).apply();
-            Intent intent = new Intent(this, MainFeedsActivity.class);
             Context context = getApplicationContext();
-            Toast toast = Toast.makeText(context, String.format("New profile, %s, created!", username), Toast.LENGTH_LONG);
-            toast.show();
-            startActivity(intent);
+            SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
+            UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
+
+            User newUser = usersDBHelper.getValidUser(username, passwordEnter.getText().toString());
+            if (newUser != null) {
+                // SEND ERROR THAT USER ALREADY EXISTS TOAST
+            }
+            else {
+                // Actually new user
+                newUser = User.initUser(username, passwordEnter.getText().toString());
+                // SET ALL PROFILE THINGS TODO
+                // Insert into db
+                usersDBHelper.insertUser(newUser);
+
+                // Save username and password to SharedPreferences
+                sharedPreferences.edit().putString("username", username).apply();
+                sharedPreferences.edit().putString("password", passwordEnter.getText().toString()).apply();
+                sharedPreferences.edit().putBoolean("useCurLocation", newUser.getUseCurLocation()).apply();
+                Intent intent = new Intent(this, MainFeedsActivity.class);
+                Toast toast = Toast.makeText(context, String.format("New profile created for %s!", username), Toast.LENGTH_LONG);
+                toast.show();
+                startActivity(intent);
+            }
         }
     }
 }

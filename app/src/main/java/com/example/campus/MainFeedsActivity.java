@@ -2,7 +2,9 @@ package com.example.campus;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -36,8 +38,6 @@ public class MainFeedsActivity extends AppCompatActivity {
     private LocationListener locationListener;
 
     private Fragment curFrag;
-
-    public static Boolean useCurLocation;
 
     /**
      * When permission for location services is requested
@@ -127,6 +127,11 @@ public class MainFeedsActivity extends AppCompatActivity {
                 bottomNavigationView.setSelectedItemId(R.id.profile_option);
             }
         }
+
+        // User DB interaction TODO NECESSARY
+//        Context context = getApplicationContext();
+//        SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
+//        UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
     }
 
     private NavigationBarView.OnItemSelectedListener bottomnavFunction = new NavigationBarView.OnItemSelectedListener() {

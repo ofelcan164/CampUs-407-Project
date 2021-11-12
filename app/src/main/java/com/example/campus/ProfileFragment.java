@@ -1,6 +1,8 @@
 package com.example.campus;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -17,6 +19,8 @@ public class ProfileFragment extends Fragment {
 
     private ImageView edit_profile_icon;
     private CheckBox curLocationCheck;
+
+    private SharedPreferences sharedPreferences;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -37,7 +41,11 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // Set sharedPreferences
+        sharedPreferences = getActivity().getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
+
         curLocationCheck = (CheckBox) v.findViewById(R.id.location_check_profile);
+        curLocationCheck.setChecked(sharedPreferences.getBoolean("useCurLocation", true));
         curLocationCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +63,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void onCurLocationChecked(View view) {
-        MainFeedsActivity.useCurLocation = ((CheckBox) view).isChecked();
-        Log.i("Check", "Switched to " + MainFeedsActivity.useCurLocation);
+        sharedPreferences.edit().putBoolean("useCurLocation", ((CheckBox) view).isChecked()).apply(); // Update the whethere user is using current location
     }
 }

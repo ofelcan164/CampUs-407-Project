@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +17,8 @@ public class SignIn extends AppCompatActivity {
     private Button signin;
     private Button createProfile;
 
-    private EditText username;
-    private EditText password;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
 
     private SharedPreferences sharedPreferences;
 
@@ -61,16 +62,25 @@ public class SignIn extends AppCompatActivity {
     }
 
     public void signInClicked() {
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        // Check against DB, if valid user then TODO
-        // Save username and password to SharedPreferences
-        sharedPreferences.edit().putString("username", username.getText().toString()).apply();
-        sharedPreferences.edit().putString("password", password.getText().toString()).apply();
+        String username = ((EditText) findViewById(R.id.username)).getText().toString();
+        String password = ((EditText) findViewById(R.id.password)).getText().toString();
+        // Check against DB
+        Context context = getApplicationContext();
+        SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
+        UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
+        User user = usersDBHelper.getValidUser(username, password);
+        if (user == null) {
+            // DISPLAY ERROR TODO
+        }
+        else {
+            // Save username and password to SharedPreferences
+            sharedPreferences.edit().putString("username", username).apply();
+            sharedPreferences.edit().putString("password", password).apply();
 
-        // Start next MainFeedsAcitivty
-        Intent intent = new Intent(this, MainFeedsActivity.class);
-        startActivity(intent);
+            // Start next MainFeedsAcitivty
+            Intent intent = new Intent(this, MainFeedsActivity.class);
+            startActivity(intent);
+        }
     }
 
 }
