@@ -2,7 +2,9 @@ package com.example.campus;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -108,9 +110,26 @@ public class MainFeedsActivity extends AppCompatActivity {
         curFrag = new SocialFeedFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, curFrag).commit();
 
-        bottomNavigationView = findViewById(R.id.bottomNavView);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
         bottomNavigationView.setOnItemSelectedListener(bottomnavFunction);
+        if (getIntent().getStringExtra("select") != null) {
+            String select = getIntent().getStringExtra("select");
+            if (select.equals("social")) {
+                bottomNavigationView.setSelectedItemId(R.id.social_option);
+            }
+            else if (select.equals("market")) {
+                bottomNavigationView.setSelectedItemId(R.id.market_option);
+            }
+            else if (select.equals("alert")) {
+                bottomNavigationView.setSelectedItemId(R.id.alert_option);
+            }
+            else if (select.equals("profile")) {
+                bottomNavigationView.setSelectedItemId(R.id.profile_option);
+            }
+        }
     }
+
+    // TODO SOME SORT OF ON STOP TO SAVE DB STUFF SPECICALLY THE USERCURLOCATION -  DONT WANT THAT UPDATING CONSTANTLY
 
     private NavigationBarView.OnItemSelectedListener bottomnavFunction = new NavigationBarView.OnItemSelectedListener() {
         @Override

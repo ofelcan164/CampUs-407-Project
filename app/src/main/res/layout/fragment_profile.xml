@@ -7,6 +7,22 @@
     tools:context=".ProfileFragment">
 
     <TextView
+        android:id="@+id/saved_location_text_profile"
+        style="@style/GenText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="20dp"
+        android:text="Saved Location:"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_text_profile"
+        app:layout_constraintVertical_bias="0.050000012" />
+
+    <TextView
         android:id="@+id/major_text_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
@@ -15,7 +31,7 @@
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/year_text_profile"
         app:layout_constraintVertical_bias="0.05" />
@@ -29,7 +45,7 @@
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/major_text_profile"
         app:layout_constraintVertical_bias="0.05" />
@@ -43,7 +59,7 @@
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_pic"
         app:layout_constraintVertical_bias="0.10" />
@@ -105,6 +121,20 @@
         app:layout_constraintTop_toTopOf="@+id/phone_text_profile" />
 
     <TextView
+        android:id="@+id/saved_location_edit_profile"
+        style="@style/GenEditTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="20dp"
+        android:hint="________________________"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/saved_location_text_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/saved_location_text_profile"
+        app:layout_constraintTop_toTopOf="@+id/saved_location_text_profile" />
+
+    <TextView
         android:id="@+id/year_text_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
@@ -113,7 +143,7 @@
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_text_profile"
         app:layout_constraintVertical_bias="0.05" />
@@ -124,6 +154,7 @@
         android:layout_height="150dp"
         android:background="@color/red_1"
         android:foreground="@drawable/standin_profile_pic"
+        android:foregroundTint="@color/white"
         android:src="@drawable/standin_profile_pic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -142,5 +173,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/settings_icon" />
+
+    <CheckBox
+        android:id="@+id/location_check_profile"
+        style="@style/GenText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/red_1"
+        android:text="Use Current Location?"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saved_location_text_profile"
+        app:layout_constraintVertical_bias="0.100000024" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
