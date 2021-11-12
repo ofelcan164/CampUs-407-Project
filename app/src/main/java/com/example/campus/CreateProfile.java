@@ -12,11 +12,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class CreateProfile extends AppCompatActivity {
+public class CreateProfile extends AppCompatActivity implements CreateUserCredsDialog.CreateUserCredsDialogListener {
 
     // Private fields
     private Button cancelBtn;
     private Button createBtn;
+    private Button createCredsBtn;
+
+    private String newUsername;
+    private String newPassword;
 
     private SharedPreferences sharedPreferences;
 
@@ -43,6 +47,15 @@ public class CreateProfile extends AppCompatActivity {
                 createClicked();
             }
         });
+
+        createCredsBtn = (Button) findViewById(R.id.create_creds_btn);
+        createCredsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open dialog
+                openCredsDialog();
+            }
+        });
     }
 
     public void createCancelClicked() {
@@ -51,7 +64,6 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     public void createClicked() {
-        // TODO NOT REALLY WHAT WILL HAPPEN
         EditText email = (EditText) findViewById(R.id.email_edit_create);
         if (email.getText().toString().indexOf("@wisc.edu") == -1) {
             Context context = getApplicationContext();
@@ -59,41 +71,55 @@ public class CreateProfile extends AppCompatActivity {
             toast.show();
             return;
         }
-        String username = email.getText().toString().substring(0, email.getText().toString().indexOf("@wisc.edu")); // TODO
-        EditText passwordEnter = (EditText) findViewById(R.id.password_create);
-        EditText passwordConfirm = (EditText) findViewById(R.id.password_confirm);
 
-        if (!passwordEnter.getText().toString().equals(passwordConfirm.getText().toString())) {
-            Context context = getApplicationContext();
-            Toast toast = Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT);
-            toast.show();
+        // Check against DB
+        Context context = getApplicationContext();
+        SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
+        UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
+
+        // If username hasn't been entered properly
+        if (usersDBHelper.usernameExists(newUsername)) {
+            Toast.makeText(context, "Username already exists or is invalid", Toast.LENGTH_SHORT);
+            openCredsDialog();
         }
+        // If passwords don't match
+        else if (newPassword == null) {
+            Toast.makeText(context, "Passwords do not match or were left empty", Toast.LENGTH_SHORT).show();
+            openCredsDialog();
+        }
+
         else {
-            // Check against DB, if valid user then TODO
-            Context context = getApplicationContext();
-            SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
-            UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
+            User newUser = User.initUser(newUsername, newPassword);
+            // SET ALL PROFILE THINGS TODO
+            // Insert into db
+            usersDBHelper.insertUser(newUser);
 
-            User newUser = usersDBHelper.getValidUser(username, passwordEnter.getText().toString());
-            if (newUser != null) {
-                // SEND ERROR THAT USER ALREADY EXISTS TOAST
-            }
-            else {
-                // Actually new user
-                newUser = User.initUser(username, passwordEnter.getText().toString());
-                // SET ALL PROFILE THINGS TODO
-                // Insert into db
-                usersDBHelper.insertUser(newUser);
-
-                // Save username and password to SharedPreferences
-                sharedPreferences.edit().putString("username", username).apply();
-                sharedPreferences.edit().putString("password", passwordEnter.getText().toString()).apply();
-                sharedPreferences.edit().putBoolean("useCurLocation", newUser.getUseCurLocation()).apply();
-                Intent intent = new Intent(this, MainFeedsActivity.class);
-                Toast toast = Toast.makeText(context, String.format("New profile created for %s!", username), Toast.LENGTH_LONG);
-                toast.show();
-                startActivity(intent);
-            }
+            // Save username and password to SharedPreferences
+            sharedPreferences.edit().putString("username", newUsername).apply();
+            sharedPreferences.edit().putString("password", newPassword).apply();
+            sharedPreferences.edit().putBoolean("useCurLocation", newUser.getUseCurLocation()).apply();
+            Intent intent = new Intent(this, MainFeedsActivity.class);
+            Toast.makeText(context, String.format("New profile created for %s!", newUsername), Toast.LENGTH_LONG).show();
+            startActivity(intent);
         }
+    }
+
+    /**
+     * Opens dialog for entering user credentials
+     */
+    public void openCredsDialog() {
+        CreateUserCredsDialog dialog = new CreateUserCredsDialog();
+        dialog.show(getSupportFragmentManager(), "create_creds");
+    }
+
+    /**
+     * Interface callback to get user credentials from dialog
+     * @param username
+     * @param password
+     */
+    @Override
+    public void saveCreds(String username, String password) {
+        newUsername = username;
+        newPassword = password;
     }
 }

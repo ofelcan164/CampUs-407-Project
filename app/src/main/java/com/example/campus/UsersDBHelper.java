@@ -45,6 +45,18 @@ public class UsersDBHelper {
     }
 
     /**
+     * Check if a username already exists
+     */
+    public boolean usernameExists(String username) {
+        if (username == null) {
+            return true;
+        }
+        createTable();
+        Cursor c = sqLiteDatabase.rawQuery(String.format("SELECT * from users WHERE username = '%s'", username), null);
+        return c.getCount() > 0;
+    }
+
+    /**
      * Inserts a user into the users database
      */
     public void insertUser(User user) {
@@ -56,5 +68,19 @@ public class UsersDBHelper {
         vals.put("savedLng", user.getSaveLocationLng());
         vals.put("useCurLocation",user.getUseCurLocation());
         sqLiteDatabase.insert("users", null, vals);
+    }
+
+    /**
+     * Update a users password
+     */
+    public User updateUserPassword(User oldUser, String newPassword) {
+        if (oldUser == null) {
+            return null;
+        }
+
+        createTable();
+        sqLiteDatabase.execSQL("UPDATE users SET password = '" + newPassword + "' WHERE password = '" + oldUser.getPassword() + "'");
+        oldUser.setPassword(newPassword);
+        return oldUser;
     }
 }

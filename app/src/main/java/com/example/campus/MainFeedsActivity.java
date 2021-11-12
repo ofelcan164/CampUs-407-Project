@@ -127,12 +127,9 @@ public class MainFeedsActivity extends AppCompatActivity {
                 bottomNavigationView.setSelectedItemId(R.id.profile_option);
             }
         }
-
-        // User DB interaction TODO NECESSARY
-//        Context context = getApplicationContext();
-//        SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
-//        UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
     }
+
+    // TODO SOME SORT OF ON STOP TO SAVE DB STUFF SPECICALLY THE USERCURLOCATION -  DONT WANT THAT UPDATING CONSTANTLY
 
     private NavigationBarView.OnItemSelectedListener bottomnavFunction = new NavigationBarView.OnItemSelectedListener() {
         @Override

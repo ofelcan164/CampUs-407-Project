@@ -67,30 +67,26 @@
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:text="Save"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_confirm_edit_profile"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_creds_btn" />
 
     <Button
         android:id="@+id/edit_profile_cancel"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
         android:text="Cancel"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_confirm_edit_profile"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_creds_btn" />
 
     <Button
         android:id="@+id/edit_profile_picture"
@@ -208,48 +204,15 @@
         app:layout_constraintTop_toBottomOf="@+id/email_text_edit_profile"
         app:layout_constraintVertical_bias="0.05" />
 
-    <EditText
-        android:id="@+id/password_confirm_edit_profile"
-        style="@style/GenEditTxt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:hint="Confirm Password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_create_edit_profile"
-        app:layout_constraintVertical_bias="0.008" />
-
-    <EditText
-        android:id="@+id/password_create_edit_profile"
-        style="@style/GenEditTxt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:hint="Enter Password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/change_pass_text_edit_profile"
-        app:layout_constraintVertical_bias="0.003" />
-
-    <TextView
-        android:id="@+id/change_pass_text_edit_profile"
-        style="@style/GenText"
+    <Button
+        android:id="@+id/edit_creds_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change Pasword:"
-        android:textSize="18dp"
-        android:textStyle="bold"
+        android:text="Edit Password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/saved_location_edit_edit"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintTop_toBottomOf="@+id/location_check_edit_profile"
+        app:layout_constraintVertical_bias="0.15" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
