@@ -43,12 +43,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="409dp"
-        android:layout_height="533dp"
-        app:layout_constraintBottom_toTpOf="@+id/floatingPlusButton"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
