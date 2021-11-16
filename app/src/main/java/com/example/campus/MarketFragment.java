@@ -13,20 +13,21 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
-public class SocialFeedFragment extends Fragment {
+public class MarketFragment extends Fragment {
 
     ImageButton imageButton;
     PopupMenu dropDownMenu;
     Menu plusButtonMenu;
 
-    public SocialFeedFragment() {
+    public MarketFragment() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_social_feed, container, false);
+        View v = inflater.inflate(R.layout.fragment_market, container, false);
 
         imageButton = (ImageButton) v.findViewById(R.id.floatingPlusButton);
         dropDownMenu = new PopupMenu(getContext(), imageButton);
