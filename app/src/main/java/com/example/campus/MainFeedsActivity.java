@@ -142,9 +142,9 @@ public class MainFeedsActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.market_option:
-                    // if (!(curFrag instanceof MarketFragment)) {
-                        // curFrag = new MarketFragment();
-                    // }
+                    if (!(curFrag instanceof MarketFragment)) {
+                        curFrag = new MarketFragment();
+                    }
                     break;
                 case R.id.alert_option:
                      if (!(curFrag instanceof AlertFragment)) {
