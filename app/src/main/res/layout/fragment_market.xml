@@ -26,7 +26,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="14dp"
         android:iconifiedByDefault="false"
-        android:queryHint="Search Alerts"
+        android:queryHint="Search Items"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
