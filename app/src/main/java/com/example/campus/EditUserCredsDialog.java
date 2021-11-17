@@ -27,6 +27,12 @@ public class EditUserCredsDialog extends AppCompatDialogFragment {
         // Inflate custom layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_creds, null);
+
+        // Get creds
+        // TODO SET TEXT SOMEHOW?
+        passwordEnter = (EditText) view.findViewById(R.id.password_enter_edit_edit);
+        passwordConfirm = (EditText) view.findViewById(R.id.password_confirm_edit_edit);
+
         builder.setView(view)
                 // Add action buttons
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -48,10 +54,6 @@ public class EditUserCredsDialog extends AppCompatDialogFragment {
                     }
                 });
 
-        // Get creds
-        // TODO SET TEXT SOMEHOW?
-        passwordEnter = (EditText) view.findViewById(R.id.password_enter_edit);
-        passwordConfirm = (EditText) view.findViewById(R.id.password_confirm_edit);
         return builder.create();
     }
 
