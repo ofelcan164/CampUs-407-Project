@@ -12,13 +12,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileFragment extends Fragment {
 
     private ImageView edit_profile_icon;
     private CheckBox curLocationCheck;
+    private Button logoutBtn;
 
     private SharedPreferences sharedPreferences;
 
@@ -32,6 +36,16 @@ public class ProfileFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        logoutBtn = v.findViewById(R.id.logoutBtn);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), SignIn.class);
+                startActivity(intent);
+            }
+        });
 
         edit_profile_icon = (ImageView) v.findViewById(R.id.edit_profile_icon);
         edit_profile_icon.setOnClickListener(new View.OnClickListener() {
