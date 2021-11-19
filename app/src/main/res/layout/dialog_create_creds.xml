@@ -17,17 +17,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_username"
+        app:layout_constraintTop_toBottomOf="@+id/create_email"
         app:layout_constraintVertical_bias="0.15" />
 
     <EditText
-        android:id="@+id/create_username"
+        android:id="@+id/create_email"
         style="@style/GenEditTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:hint="Enter Username"
+        android:hint="Email (must be @wisc.edu)"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
