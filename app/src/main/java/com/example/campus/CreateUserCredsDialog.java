@@ -52,7 +52,7 @@ public class CreateUserCredsDialog extends AppCompatDialogFragment {
 
         // Get creds
         // TODO SET TEXT SOMEHOW?
-        usernameEditText = (EditText) view.findViewById(R.id.create_username);
+        usernameEditText = (EditText) view.findViewById(R.id.create_email);
         passwordEnter = (EditText) view.findViewById(R.id.password_enter_edit);
         passwordConfirm = (EditText) view.findViewById(R.id.password_confirm_edit);
         return builder.create();
