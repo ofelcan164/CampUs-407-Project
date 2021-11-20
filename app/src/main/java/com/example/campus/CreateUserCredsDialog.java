@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -14,7 +15,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class CreateUserCredsDialog extends AppCompatDialogFragment {
 
-    private EditText usernameEditText;
+    private EditText emailEditText;
     private EditText passwordEnter;
     private EditText passwordConfirm;
 
@@ -23,38 +24,48 @@ public class CreateUserCredsDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Enter your username and password");
+        builder.setTitle("Enter your email and password");
 
         // Inflate custom layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_create_creds, null);
+
         builder.setView(view)
                 // Add action buttons
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        String username = usernameEditText.getText().toString();
-                        if (passwordEnter.getText().toString().equals(passwordConfirm.getText().toString())) {
-                            String password = passwordConfirm.getText().toString();
-                            listener.saveCreds(username, password);
-                        }
-                        else {
-                            // Passwords must match
-                            listener.saveCreds(username, null);
+                        // Validate user input
+                        if (emailEditText.getText().toString() == null || emailEditText.getText().toString().equals("")) {
+                            emailEditText.setError("Enter your email");
+                            listener.saveCreds(null, null, null);
+                        } else if (passwordEnter.getText().toString() == null || passwordEnter.getText().toString().equals("")) {
+                            passwordEnter.setError("Enter your password");
+                            listener.saveCreds(emailEditText.getText().toString(), null, null);
+                        } else if (passwordConfirm.getText().toString() == null || passwordConfirm.getText().toString().equals("")) {
+                            passwordConfirm.setError("Confirm your password");
+                            listener.saveCreds(emailEditText.getText().toString(), null, null);
+                        } else if (!passwordEnter.getText().toString().equals(passwordConfirm.getText().toString())) {
+                            passwordConfirm.setError("Passwords must match");
+                            listener.saveCreds(emailEditText.getText().toString(), null, null);
+                        } else if (passwordEnter.getText().toString().length() < 6) {
+                            listener.saveCreds(emailEditText.getText().toString(), null, null);
+                        } else {
+                            // Valid user credentials
+                            listener.saveCreds(emailEditText.getText().toString(), passwordEnter.getText().toString(), passwordConfirm.getText().toString());
                         }
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.saveCreds(null, null);
+                        listener.saveCreds(null, null, null);
                     }
                 });
 
-        // Get creds
-        // TODO SET TEXT SOMEHOW?
-        usernameEditText = (EditText) view.findViewById(R.id.create_email);
+        emailEditText = (EditText) view.findViewById(R.id.create_email);
         passwordEnter = (EditText) view.findViewById(R.id.password_enter_edit);
         passwordConfirm = (EditText) view.findViewById(R.id.password_confirm_edit);
+
         return builder.create();
     }
 
@@ -70,6 +81,6 @@ public class CreateUserCredsDialog extends AppCompatDialogFragment {
     }
 
     public interface CreateUserCredsDialogListener {
-        void saveCreds(String username, String password);
+        void saveCreds(String email, String password1, String password2);
     }
 }

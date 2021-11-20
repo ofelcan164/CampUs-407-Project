@@ -41,6 +41,7 @@ public class ProfileFragment extends Fragment {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sharedPreferences.edit().clear().apply();
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getActivity(), SignIn.class);
                 startActivity(intent);
@@ -73,6 +74,8 @@ public class ProfileFragment extends Fragment {
 
     private void editProfileIconClicked() {
         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+//        intent.putExtra("year", ); TODO
+//        intent.putExtra("major", );
         startActivity(intent);
     }
 
