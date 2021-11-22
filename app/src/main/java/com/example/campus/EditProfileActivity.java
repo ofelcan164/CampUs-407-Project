@@ -10,7 +10,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class EditProfileActivity extends AppCompatActivity implements EditUserCredsDialog.EditUserCredsDialogListener {
 
@@ -20,14 +25,23 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
 
     private CheckBox curLocationCheck;
 
+    private EditText emailEditText;
+    private EditText majorEditText;
+    private EditText phoneEditText;
+    private EditText yearEditText;
+
     private SharedPreferences sharedPreferences;
 
     private String newPassword;
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        mAuth = FirebaseAuth.getInstance();
 
         cancel = (Button) findViewById(R.id.edit_profile_cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +77,19 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                 onCurLocationChecked(view);
             }
         });
+
+        // TODO TODO
+//        emailEditText = (EditText) findViewById(R.id.email_edit_edit_profile);
+//        emailEditText.setText(mAuth.getCurrentUser().getEmail());
+//
+//        yearEditText = (EditText) findViewById(R.id.year_edit_edit_profile);
+//        yearEditText.setText(getIntent().getStringExtra("year"));
+//
+//        majorEditText = (EditText) findViewById(R.id.major_edit_edit_profile);
+//        majorEditText.setText(getIntent().getStringExtra("major"));
+//
+//        phoneEditText = (EditText) findViewById(R.id.phone_edit_edit_profile);
+//        phoneEditText.setText(mAuth.getCurrentUser().getPhoneNumber());
     }
 
     private void onCancelClicked() {
@@ -70,35 +97,41 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
     }
 
     private void onSaveClicked() {
-        // TODO SAVE TO DB AND GET FOR VALID INPUT
         if (newPassword == null) {
-            Toast.makeText(getApplicationContext(), "Passwords do not match or were left empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Passwords much both be matching and valid [6 characters or more]", Toast.LENGTH_SHORT).show();
             openEditCredsDialog();
+            return;
         }
         else {
-            Context context = getApplicationContext();
-            SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
-            UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
-            User oldUser = usersDBHelper.getValidUser(sharedPreferences.getString("username", ""), sharedPreferences.getString("password", ""));
+            // TODO EMAIL VERIFICATION??
+            if (!newPassword.equals("")) {
+                FirebaseUser curUser = mAuth.getCurrentUser();
+                curUser.updatePassword(newPassword);
 
-            User newUser = usersDBHelper.updateUserPassword(oldUser, newPassword);
-            if (newUser != null) {
-                // Save username and password to SharedPreferences
-                sharedPreferences.edit().putString("username", newUser.getUsername()).apply();
-                sharedPreferences.edit().putString("password", newUser.getPassword()).apply();
-                sharedPreferences.edit().putBoolean("useCurLocation", newUser.getUseCurLocation()).apply();
+                // Save new password to SharedPreferences
+                sharedPreferences.edit().putString("password", newPassword).apply();
 
                 // Return to profile
-                Toast.makeText(context, "Password updated!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainFeedsActivity.class).putExtra("select", "profile"));
+                Toast.makeText(getApplicationContext(), "Password updated!", Toast.LENGTH_SHORT).show();
             }
+
+            // Other none credential based user info
+
+
+            startActivity(new Intent(this, MainFeedsActivity.class).putExtra("select", "profile"));
         }
     }
 
+    /**
+     * Update the whether user is using current location
+     */
     private void onCurLocationChecked(View view) {
-        sharedPreferences.edit().putBoolean("useCurLocation", ((CheckBox) view).isChecked()).apply(); // Update the whethere user is using current location
+        sharedPreferences.edit().putBoolean("useCurLocation", ((CheckBox) view).isChecked()).apply();
     }
 
+    /**
+     * Open the edit user credentials dialog
+     */
     public void openEditCredsDialog() {
         EditUserCredsDialog dialog = new EditUserCredsDialog();
         dialog.show(getSupportFragmentManager(), "edit_creds");

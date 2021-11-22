@@ -126,6 +126,8 @@ public class MainFeedsActivity extends AppCompatActivity {
             else if (select.equals("profile")) {
                 bottomNavigationView.setSelectedItemId(R.id.profile_option);
             }
+        } else {
+            bottomNavigationView.setSelectedItemId(R.id.social_option);
         }
     }
 
