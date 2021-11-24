@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <Button
-        android:id="@+id/newPost"
+        android:id="@+id/newSocialPostBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post to Social Feed"
@@ -30,7 +30,7 @@
         app:layout_constraintVertical_bias="0.9" />
 
     <EditText
-        android:id="@+id/postContent"
+        android:id="@+id/socialPostContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -44,7 +44,7 @@
         app:layout_constraintVertical_bias="0.4" />
 
     <Button
-        android:id="@+id/addPicture"
+        android:id="@+id/addPictureSocial"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

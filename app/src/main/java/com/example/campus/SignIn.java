@@ -45,6 +45,7 @@ public class SignIn extends AppCompatActivity {
 
         // Check for saved email and password
         if (!(sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals(""))) {
+            mAuth.signInWithEmailAndPassword(sharedPreferences.getString("email", ""), sharedPreferences.getString("password", ""));
             Intent intent = new Intent(this, MainFeedsActivity.class);
             startActivity(intent);
         } else {

@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <Button
-        android:id="@+id/newPost"
+        android:id="@+id/newAlertPostBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post to Alerts"
@@ -30,7 +30,7 @@
         app:layout_constraintVertical_bias="0.9" />
 
     <EditText
-        android:id="@+id/alertTitle"
+        android:id="@+id/newAlertTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -43,21 +43,21 @@
         app:layout_constraintVertical_bias="0.2" />
 
     <EditText
-        android:id="@+id/postContent"
+        android:id="@+id/alertPostContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="What's happening?"
         android:gravity="start|top"
+        android:hint="What's happening?"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintTop_toBottomOf="@+id/newAlertTitle"
+        app:layout_constraintVertical_bias="0.2" />
 
     <Button
-        android:id="@+id/addPicture"
+        android:id="@+id/addPictureAlert"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
