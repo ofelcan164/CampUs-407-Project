@@ -40,7 +40,7 @@ public class SocialFeedFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch(item.getItemId()) {
-                    case R.id.newSocialPost:
+                    case R.id.newSocialPostText:
                         Intent newSocialPostIntent = new Intent(getActivity(), CreateNewSocialPost.class);
                         startActivity(newSocialPostIntent);
                         return true;

@@ -7,7 +7,7 @@
     tools:context=".CreateNewMarketPost">
 
     <TextView
-        android:id="@+id/newSale"
+        android:id="@+id/newSaleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Sale"
@@ -16,38 +16,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="0.1" />
 
     <Button
-        android:id="@+id/newSaleButton"
+        android:id="@+id/newPostSaleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post to Market"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/addPhotoSale"
+        app:layout_constraintVertical_bias="0.5" />
 
     <EditText
         android:id="@+id/newSaleTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="15"
+        android:gravity="center"
         android:hint="Sale Title"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newSale"
-        app:layout_constraintVertical_bias="0.100000024"
+        app:layout_constraintTop_toBottomOf="@+id/newSaleText"
+        app:layout_constraintVertical_bias="0.15"
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
         android:id="@+id/newSalePhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="15"
+        android:gravity="start"
         android:hint="(608) 123-4567"
         android:inputType="phone"
         android:minHeight="48dp"
@@ -61,7 +63,7 @@
         android:id="@+id/newSaleDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="15"
         android:gravity="start|top"
         android:hint="Item description"
         android:inputType="textMultiLine"
@@ -73,7 +75,7 @@
         app:layout_constraintVertical_bias="0.050000012" />
 
     <Button
-        android:id="@+id/addPicture"
+        android:id="@+id/addPhotoSale"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintTop_toBottomOf="@+id/newSaleDescription"
+        app:layout_constraintVertical_bias="0.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

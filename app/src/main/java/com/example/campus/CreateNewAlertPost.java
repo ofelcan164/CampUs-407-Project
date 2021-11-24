@@ -24,7 +24,7 @@ public class CreateNewAlertPost extends AppCompatActivity {
             public void onClick(View v) {
                 // Get post info
                 EditText alertPostTitle = (EditText) findViewById(R.id.newAlertTitle);
-                EditText alertPostContent = (EditText) findViewById(R.id.alertPostContent);
+                EditText alertPostContent = (EditText) findViewById(R.id.newAlertContent);
                 if (alertPostTitle.getText().toString() != null && !alertPostTitle.getText().toString().equals("")
                         && alertPostContent.getText().toString() != null && !alertPostContent.getText().toString().equals("")) {
                     AlertPost post = new AlertPost(alertPostTitle.getText().toString(), alertPostContent.getText().toString());

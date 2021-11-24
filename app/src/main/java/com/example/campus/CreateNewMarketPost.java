@@ -18,7 +18,7 @@ public class CreateNewMarketPost extends AppCompatActivity {
         // Post helper instance
         NewPostHelper postHelper = new NewPostHelper();
 
-        Button postBtn = (Button) findViewById(R.id.newSaleButton);
+        Button postBtn = (Button) findViewById(R.id.newPostSaleBtn);
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
