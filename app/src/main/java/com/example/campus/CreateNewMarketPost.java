@@ -8,7 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class CreateNewMarketPost extends AppCompatActivity {
+
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +21,9 @@ public class CreateNewMarketPost extends AppCompatActivity {
 
         // Post helper instance
         NewPostHelper postHelper = new NewPostHelper();
+
+        // Auth
+        mAuth = FirebaseAuth.getInstance();
 
         Button postBtn = (Button) findViewById(R.id.newPostSaleBtn);
         postBtn.setOnClickListener(new View.OnClickListener() {
@@ -31,7 +38,8 @@ public class CreateNewMarketPost extends AppCompatActivity {
                         && salePostDescription.getText().toString() != null && !salePostDescription.getText().toString().equals("")) {
                     MarketPost post = new MarketPost(salePostTilte.getText().toString(),
                             salePostPhone.getText().toString(),
-                            salePostDescription.getText().toString());
+                            salePostDescription.getText().toString(),
+                            mAuth.getUid());
 
                     // Post the post!
                     postHelper.postMarket(post);
