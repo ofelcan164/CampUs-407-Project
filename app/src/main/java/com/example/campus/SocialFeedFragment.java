@@ -34,6 +34,7 @@ public class SocialFeedFragment extends Fragment {
     Menu plusButtonMenu;
 
     RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
     SocialPostAdapter adapter;
     ArrayList<SocialPost> posts;
 
@@ -107,8 +108,13 @@ public class SocialFeedFragment extends Fragment {
         });
 
         // Set up recycler view
+        linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView = (RecyclerView) v.findViewById(R.id.socialFeedRecycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        linearLayoutManager.setReverseLayout(true); // Newest posts first
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         // Query of the database with FirebaseRecyclerOptions
         FirebaseRecyclerOptions<SocialPost> options = new FirebaseRecyclerOptions.Builder<SocialPost>()
