@@ -79,7 +79,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         });
 
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
-
     }
 
     /**
@@ -109,7 +108,7 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
             return;
         }
 
-        // Valid user, register with Firebase Authenticaion
+        // Valid user, register with Firebase Authentication
         mAuth.createUserWithEmailAndPassword(emailFromDialog, passwordFromDialog1)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -127,6 +126,13 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
 //                        progressDialog.dismiss();
                     }
                 });
+
+//        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                .setDisplayName("Jane Q. User")
+//                .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
+//                .build();
+//
+//        user.updateProfile(profileUpdates)
 
     }
 

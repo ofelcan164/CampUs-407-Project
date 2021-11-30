@@ -33,7 +33,7 @@ public class CreateNewAlertPost extends AppCompatActivity {
                 EditText alertPostContent = (EditText) findViewById(R.id.newAlertContent);
                 if (alertPostTitle.getText().toString() != null && !alertPostTitle.getText().toString().equals("")
                         && alertPostContent.getText().toString() != null && !alertPostContent.getText().toString().equals("")) {
-                    AlertPost post = new AlertPost(alertPostTitle.getText().toString(), alertPostContent.getText().toString(), mAuth.getUid());
+                    AlertPost post = new AlertPost(alertPostTitle.getText().toString(), alertPostContent.getText().toString(), mAuth.getUid()); // TODO Username
 
                     // Post the post!
                     postHelper.postAlert(post);

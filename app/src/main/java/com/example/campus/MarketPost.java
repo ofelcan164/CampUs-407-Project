@@ -38,7 +38,6 @@ public class MarketPost {
     public String getUID() { return this.UID; }
 
     // Setters
-
     public void setTitle(String title) {
         this.title = title;
     }

@@ -10,6 +10,7 @@
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/dialog_create_creds.xml" value="0.36666666666666664" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/dialog_edit_creds.xml" value="0.36666666666666664" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/fragment_profile.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/social_post_layout.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_create_new_alert_post.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_create_new_market_post.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_create_new_social_post.xml" value="0.25416666666666665" />
@@ -25,8 +26,6 @@
         <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/activity_create_new_alert_post.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/activity_create_new_market_post.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/activity_create_new_social_post.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/fragment_social_feed.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/social_post_layout.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/layout/activity_create_new_alert_post.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_create_new_market_post.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_create_new_social_post.xml" value="0.3098958333333333" />

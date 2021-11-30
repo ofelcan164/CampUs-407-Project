@@ -30,27 +30,27 @@ public class CreateNewMarketPost extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Get post info
-                EditText salePostTilte = (EditText) findViewById(R.id.newSaleTitle);
+                EditText salePostTitle = (EditText) findViewById(R.id.newSaleTitle);
                 EditText salePostPhone = (EditText) findViewById(R.id.newSalePhone);
                 EditText salePostDescription = (EditText) findViewById(R.id.newSaleDescription);
-                if (salePostTilte.getText().toString() != null && !salePostTilte.getText().toString().equals("")
+                if (salePostTitle.getText().toString() != null && !salePostTitle.getText().toString().equals("")
                         && salePostPhone.getText().toString() != null && !salePostPhone.getText().toString().equals("")
                         && salePostDescription.getText().toString() != null && !salePostDescription.getText().toString().equals("")) {
-                    MarketPost post = new MarketPost(salePostTilte.getText().toString(),
+                    MarketPost post = new MarketPost(salePostTitle.getText().toString(),
                             salePostPhone.getText().toString(),
                             salePostDescription.getText().toString(),
-                            mAuth.getUid());
+                            mAuth.getUid()); // TODO Username
 
                     // Post the post!
                     postHelper.postMarket(post);
-                    salePostTilte.setError(null);
+                    salePostTitle.setError(null);
                     salePostPhone.setError(null);
                     salePostDescription.setError(null);
                     Intent intent = new Intent(CreateNewMarketPost.this, MainFeedsActivity.class);
                     intent.putExtra("select", "market");
                     startActivity(intent);
                 } else {
-                    salePostTilte.setError("Please enter you post's title");
+                    salePostTitle.setError("Please enter you post's title");
                     salePostPhone.setError("Please enter your phone number");
                     salePostDescription.setError("Please enter the sale's description");
                 }

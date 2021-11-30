@@ -32,7 +32,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
                 // Get post info
                 EditText socialPostContent = (EditText) findViewById(R.id.newSocialPostContent);
                 if (socialPostContent.getText().toString() != null && !socialPostContent.getText().toString().equals("")) {
-                    SocialPost post = new SocialPost(socialPostContent.getText().toString(), mAuth.getUid());
+                    SocialPost post = new SocialPost(socialPostContent.getText().toString(), mAuth.getCurrentUser().getDisplayName());
 
                     // Post the post!
                     postHelper.postSocial(post);
