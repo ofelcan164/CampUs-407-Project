@@ -3,13 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_create_profile.xml" value="0.36666666666666664" />
-        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_edit_profile.xml" value="0.36666666666666664" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_main.xml" value="0.28532608695652173" />
-        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_signin.xml" value="0.36666666666666664" />
-        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/dialog_create_creds.xml" value="0.36666666666666664" />
-        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/dialog_edit_creds.xml" value="0.36666666666666664" />
-        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/fragment_profile.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/drawable/spinner_background.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_create_new_alert_post.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_create_new_market_post.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_create_new_social_post.xml" value="0.25416666666666665" />

@@ -107,12 +107,18 @@ public class SocialFeedFragment extends Fragment {
         });
 
         // Set up recycler view
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView = (RecyclerView) v.findViewById(R.id.socialFeedRecycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         // Query of the database with FirebaseRecyclerOptions
         FirebaseRecyclerOptions<SocialPost> options = new FirebaseRecyclerOptions.Builder<SocialPost>()
                 .setQuery(mRef, SocialPost.class).build();
+
+        // Reverse order of the RecyclerView
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         // Connect the adapter
         adapter = new SocialPostAdapter(options);
