@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,15 +23,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class CreateProfile extends AppCompatActivity {
+public class CreateProfile extends AppCompatActivity implements CreateUserCredsDialog.CreateUserCredsDialogListener {
 
     private Button cancelBtn;
     private Button createBtn;
     private Button createCredsBtn;
 
-    private EditText email;
-    private EditText password1;
-    private EditText password2;
+    private String passwordFromDialog1;
+    private String passwordFromDialog2;
+    private String emailFromDialog;
+    private EditText username;
     private ProgressDialog progressDialog;
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
@@ -42,6 +42,7 @@ public class CreateProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
 
+        // Set up cancel button
         cancelBtn = (Button) findViewById(R.id.create_cancel);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +51,10 @@ public class CreateProfile extends AppCompatActivity {
             }
         });
 
+        // Firebase Auth object
+        mAuth = FirebaseAuth.getInstance();
+
+        // Set up button for creating user credentials
         createCredsBtn = (Button) findViewById(R.id.create_creds_btn);
         createCredsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,68 +64,70 @@ public class CreateProfile extends AppCompatActivity {
             }
         });
 
-        email = (EditText) findViewById(R.id.create_email);
-        password1 = (EditText) findViewById(R.id.password_enter_edit);
-        password2 = (EditText) findViewById(R.id.password_confirm_edit);
+        username = (EditText) findViewById(R.id.username_edit_create);
         progressDialog = new ProgressDialog(this);
         createBtn = (Button) findViewById(R.id.create);
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (email.getText().toString().indexOf("@wisc.edu") == -1) {
-                    Context context = getApplicationContext();
-                    Toast toast = Toast.makeText(context, "Must enter a wisc.edu email", Toast.LENGTH_SHORT);
-                    toast.show();
+                if (username == null || username.getText().toString().equals("")) {
+                    username.setError("Please enter a valid username");
                 } else {
                     Register();
                 }
             }
         });
 
-        // sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
     }
 
+    /**
+     * Cancel button clicked
+     */
     public void createCancelClicked() {
         Intent intent = new Intent(this, SignIn.class);
         startActivity(intent);
     }
 
+    /**
+     * User information is valid, register user with Firebase Authentication
+     */
     private void Register() {
-        String emailString = email.getText().toString();
-        String password1String = password1.getText().toString();
-        String password2String = password2.getText().toString();
-        if (TextUtils.isEmpty(emailString)) {
-            email.setError("Enter your email");
+//        progressDialog.setMessage("Please wait...");
+//        progressDialog.show();
+//        progressDialog.setCanceledOnTouchOutside(false);
+
+        // Validate user-inputted credentials
+        if (emailFromDialog == null) {
+            Toast.makeText(getApplicationContext(), "Must enter a wisc.edu email", Toast.LENGTH_SHORT).show();
+            openCredsDialog();
             return;
-        } else if (TextUtils.isEmpty(password1String)) {
-            password1.setError("Enter your password");
-            return;
-        } else if (TextUtils.isEmpty(password2String)) {
-            password2.setError("Confirm your password");
-            return;
-        } else if (!password1String.equals(password2String)) {
-            password2.setError("Enter different password");
+        } else if (passwordFromDialog1 == null || passwordFromDialog2 == null) {
+            Toast.makeText(getApplicationContext(), "Must enter and confirm a valid password [6 characters or more]", Toast.LENGTH_SHORT).show();
+            openCredsDialog();
             return;
         }
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
-        progressDialog.setCanceledOnTouchOutside(false);
-        mAuth.createUserWithEmailAndPassword(emailString, password1String)
+
+        // Valid user, register with Firebase Authenticaion
+        mAuth.createUserWithEmailAndPassword(emailFromDialog, passwordFromDialog1)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(CreateProfile.this, "Successfully registered", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(CreateProfile.this, MainFeedsActivity.class);
-                            startActivity(intent);
-                            finish();
+                            Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
+
+                            sharedPreferences.edit().putString("email", emailFromDialog).apply();
+                            sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
+
+                            startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
                         } else {
                             Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
                         }
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
                 });
+
     }
 
     /**
@@ -130,7 +137,6 @@ public class CreateProfile extends AppCompatActivity {
         CreateUserCredsDialog dialog = new CreateUserCredsDialog();
         dialog.show(getSupportFragmentManager(), "create_creds");
     }
-}
 
 //    public void createClicked() {
 //        EditText email = (EditText) findViewById(R.id.email_edit_create);
@@ -174,13 +180,16 @@ public class CreateProfile extends AppCompatActivity {
 //    }
 //
 //
-//    /**
-//     * Interface callback to get user credentials from dialog
-//     * @param username
-//     * @param password
-//     */
-//    @Override
-//    public void saveCreds(String username, String password) {
-//        newUsername = username;
-//        newPassword = password;
-//    }
+    /**
+     * Interface callback to get user credentials from dialog
+     * @param email
+     * @param password1
+     * @param password2
+     */
+    @Override
+    public void saveCreds(String email, String password1, String password2) {
+        emailFromDialog = email;
+        passwordFromDialog1 = password1;
+        passwordFromDialog2 = password2;
+    }
+}

@@ -27,31 +27,35 @@ public class EditUserCredsDialog extends AppCompatDialogFragment {
         // Inflate custom layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_creds, null);
+
+        // Get creds
+        passwordEnter = (EditText) view.findViewById(R.id.password_enter_edit_edit);
+        passwordConfirm = (EditText) view.findViewById(R.id.password_confirm_edit_edit);
+
         builder.setView(view)
                 // Add action buttons
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if (passwordEnter.getText().toString().equals(passwordConfirm.getText().toString())) {
+                        if (passwordEnter.getText().toString().equals(passwordConfirm.getText().toString())
+                                && passwordEnter.getText().toString().length() >= 6) {
                             String password = passwordConfirm.getText().toString();
                             listener.saveEditCreds(password);
                         }
                         else {
                             // Passwords must match
+                            passwordEnter.setError("Passwords do no match");
+                            passwordConfirm.setError("Passwords do no match");
                             listener.saveEditCreds(null);
                         }
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.saveEditCreds(null);
+                        listener.saveEditCreds("");
                     }
                 });
 
-        // Get creds
-        // TODO SET TEXT SOMEHOW?
-        passwordEnter = (EditText) view.findViewById(R.id.password_enter_edit);
-        passwordConfirm = (EditText) view.findViewById(R.id.password_confirm_edit);
         return builder.create();
     }
 

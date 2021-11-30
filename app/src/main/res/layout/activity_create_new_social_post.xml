@@ -7,7 +7,7 @@
     tools:context=".CreateNewSocialPost">
 
     <TextView
-        android:id="@+id/newSocialPost"
+        android:id="@+id/newSocialPostText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Post"
@@ -16,35 +16,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <Button
-        android:id="@+id/newPost"
+        android:id="@+id/newSocialPostBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post to Social Feed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/addPhotoSocial"
+        app:layout_constraintVertical_bias="0.5" />
 
     <EditText
-        android:id="@+id/postContent"
+        android:id="@+id/newSocialPostContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="What do you want to say?"
+        android:ems="15"
         android:gravity="start|top"
+        android:hint="What do you want to say?"
         android:inputType="textMultiLine"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintTop_toBottomOf="@+id/newSocialPostText"
+        app:layout_constraintVertical_bias=".15" />
 
     <Button
-        android:id="@+id/addPicture"
+        android:id="@+id/addPhotoSocial"
         style="@style/BtnTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,7 +57,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintTop_toBottomOf="@+id/newSocialPostContent"
+        app:layout_constraintVertical_bias="0.65" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

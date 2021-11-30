@@ -126,10 +126,12 @@ public class MainFeedsActivity extends AppCompatActivity {
             else if (select.equals("profile")) {
                 bottomNavigationView.setSelectedItemId(R.id.profile_option);
             }
+        } else {
+            bottomNavigationView.setSelectedItemId(R.id.social_option);
         }
     }
 
-    // TODO SOME SORT OF ON STOP TO SAVE DB STUFF SPECICALLY THE USERCURLOCATION -  DONT WANT THAT UPDATING CONSTANTLY
+    // TODO SOME SORT OF ON STOP TO SAVE DB STUFF ESPECIALLY THE USER LOCATION -  DONT WANT THAT UPDATING CONSTANTLY
 
     private NavigationBarView.OnItemSelectedListener bottomnavFunction = new NavigationBarView.OnItemSelectedListener() {
         @Override

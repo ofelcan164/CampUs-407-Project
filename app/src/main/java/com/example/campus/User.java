@@ -9,7 +9,7 @@ public class User {
     private boolean useCurLocation;
 
     /**
-     * Construcor
+     * Constructor
      */
     public User(String username, String password, double savedLocationLat, double savedLocationLng, boolean useCurLocation) {
         this.username = username;
