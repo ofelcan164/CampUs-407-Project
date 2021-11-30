@@ -13,16 +13,15 @@
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_signin.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/activity_social_feed.xml" value="0.2140625" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/fragment_alert.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/fragment_market.xml" value="0.2546875" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/fragment_profile.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/fragment_social_feed.xml" value="0.1793478260869565" />
+        <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/marker_post_layout.xml" value="0.1828125" />
+        <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/market_post_layout.xml" value="0.2546875" />
+        <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/layout/social_post_layout.xml" value="0.1828125" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/menu/bottom_nav_menu.xml" value="0.21510416666666668" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/menu/menu_social_feed.xml" value="0.22083333333333333" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/menu/plus_button_menu.xml" value="0.25052083333333336" />
-        <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/activity_create_new_alert_post.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/activity_create_new_market_post.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/activity_create_new_social_post.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/fragment_social_feed.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ofelc/Desktop/CampUs Project/app/src/main/res/layout/social_post_layout.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/layout/activity_create_new_alert_post.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_create_new_market_post.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_create_new_social_post.xml" value="0.3098958333333333" />

@@ -3,7 +3,10 @@ package com.example.campus;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,12 +15,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.Toast;
+
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MarketFragment extends Fragment {
 
     ImageButton imageButton;
     PopupMenu dropDownMenu;
     Menu plusButtonMenu;
+
+    RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+    MarketPostAdapter adapter;
+    ArrayList<MarketPost> posts;
+
+    DatabaseReference mRef;
 
     public MarketFragment() {
         // Required empty public constructor
@@ -66,7 +86,63 @@ public class MarketFragment extends Fragment {
             }
         });
 
+        // Database reference
+        mRef = FirebaseDatabase.getInstance().getReference().child("posts").child("market");
+
+        // Initialize posts
+        posts = new ArrayList<>();
+
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    MarketPost mp = ds.getValue(MarketPost.class);
+                    posts.add(mp);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show(); // TODO
+            }
+        });
+
+        // Set up recycler view
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView = (RecyclerView) v.findViewById(R.id.marketFeedRecycler);
+
+        linearLayoutManager.setReverseLayout(true); // Newest posts first
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        // Query of the database with FirebaseRecyclerOptions
+        FirebaseRecyclerOptions<MarketPost> options = new FirebaseRecyclerOptions.Builder<MarketPost>()
+                .setQuery(mRef, MarketPost.class).build();
+
+        // Connect the adapter
+        adapter = new MarketPostAdapter(options);
+        recyclerView.setAdapter(adapter);
+
         //Return fragment view
         return v;
+    }
+
+    /**
+     * Tells the app to start getting
+     * data from database on starting of the activity
+     */
+    @Override public void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    /**
+     * Function to tell the app to stop getting
+     * data from database on stopping of the activity
+     */
+    @Override public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }
