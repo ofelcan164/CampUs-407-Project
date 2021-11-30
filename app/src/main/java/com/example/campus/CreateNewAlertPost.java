@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -23,6 +25,13 @@ public class CreateNewAlertPost extends AppCompatActivity {
 
         // Auth
         mAuth = FirebaseAuth.getInstance();
+
+        // Sets the dropdown selection for the alert urgency
+        Spinner urgencyDropdown = findViewById(R.id.urgencySpinner);
+        String[] spinnerItems = new String[] {"!","!!","!!!","!!!!","!!!!!"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        urgencyDropdown.setAdapter(adapter);
 
         Button postBtn = (Button) findViewById(R.id.newAlertPostBtn);
         postBtn.setOnClickListener(new View.OnClickListener() {
