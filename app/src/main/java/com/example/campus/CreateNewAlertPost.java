@@ -40,9 +40,14 @@ public class CreateNewAlertPost extends AppCompatActivity {
                 // Get post info
                 EditText alertPostTitle = (EditText) findViewById(R.id.newAlertTitle);
                 EditText alertPostContent = (EditText) findViewById(R.id.newAlertContent);
+
+                // Get urgency dropdown choice
+                Spinner spinner = (Spinner)findViewById(R.id.urgencySpinner);
+                String urgencyRating = spinner.getSelectedItem().toString();
+
                 if (alertPostTitle.getText().toString() != null && !alertPostTitle.getText().toString().equals("")
                         && alertPostContent.getText().toString() != null && !alertPostContent.getText().toString().equals("")) {
-                    AlertPost post = new AlertPost(alertPostTitle.getText().toString(), alertPostContent.getText().toString(), mAuth.getUid());
+                    AlertPost post = new AlertPost(alertPostTitle.getText().toString(), alertPostContent.getText().toString(), mAuth.getUid(),urgencyRating);
 
                     // Post the post!
                     postHelper.postAlert(post);

@@ -31,7 +31,7 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
     }
 
     /**
-     * Binds XML (market_post_layout) to the required data from SocialPost class
+     * Binds XML (market_post_layout) to the required data from MarketPost class
      */
     @Override
     public void onBindViewHolder(@NonNull MarketPostAdapter.marketPostViewHolder holder, int position, MarketPost post) {
