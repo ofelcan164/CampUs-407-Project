@@ -3,9 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_create_new_alert_post.xml" value="0.36666666666666664" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_create_profile.xml" value="0.36666666666666664" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_main.xml" value="0.28532608695652173" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/activity_signin.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/alert_post_layout.xml" value="0.9" />
+        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/fragment_alert.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/fragment_market.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/fragment_social_feed.xml" value="0.36666666666666664" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/market_post_layout.xml" value="0.33" />
         <entry key="..\:/Android/AndroidStudioProjects/CampUs/app/src/main/res/layout/social_post_layout.xml" value="0.8315334773218143" />
         <entry key="..\:/Users/ckrau/AndroidStudioProjects/CampUs-407-Project/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.19583333333333333" />

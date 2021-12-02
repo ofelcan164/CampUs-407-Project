@@ -39,7 +39,7 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
         holder.title.setText(post.getTitle());
         holder.username.setText(post.getUsername());
         holder.description.setText(post.getDescription());
-        holder.number.setText("Phone Number: " + post.getPhoneNum());
+        holder.number.setText(post.getPhoneNum());
     }
 
     /**
