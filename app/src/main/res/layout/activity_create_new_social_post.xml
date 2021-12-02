@@ -60,4 +60,15 @@
         app:layout_constraintTop_toBottomOf="@+id/newSocialPostContent"
         app:layout_constraintVertical_bias="0.65" />
 
+    <ImageView
+        android:id="@+id/imageViewSocial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_add_photo_foreground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newSocialPostContent"
+        app:layout_constraintVertical_bias="0.45" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
