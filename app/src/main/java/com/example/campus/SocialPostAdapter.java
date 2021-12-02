@@ -36,6 +36,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
     @Override
     public void onBindViewHolder(@NonNull socialPostViewHolder holder, int position, SocialPost post) {
         // Add posts content to view in XML
+        holder.username.setText(post.getUsername());
         holder.content.setText(post.getContent());
     }
 
@@ -43,6 +44,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
      * Subclass to get references to view objects by ID
      */
     class socialPostViewHolder extends RecyclerView.ViewHolder {
+        TextView username;
         TextView content;
 
         /**
@@ -51,6 +53,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         public socialPostViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            username = (TextView) itemView.findViewById(R.id.socialPostUsername);
             content = (TextView) itemView.findViewById(R.id.socialPostContent);
         }
     }

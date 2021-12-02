@@ -18,7 +18,7 @@ public class NewPostHelper {
     private DatabaseReference mRef;
 
     /**
-     * Construtor
+     * Constructor
      * Initializes private fields
      */
     public NewPostHelper() {

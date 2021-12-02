@@ -47,7 +47,7 @@ public class CreateNewAlertPost extends AppCompatActivity {
 
                 if (alertPostTitle.getText().toString() != null && !alertPostTitle.getText().toString().equals("")
                         && alertPostContent.getText().toString() != null && !alertPostContent.getText().toString().equals("")) {
-                    AlertPost post = new AlertPost(alertPostTitle.getText().toString(), alertPostContent.getText().toString(), mAuth.getUid(),urgencyRating);
+                    AlertPost post = new AlertPost(alertPostTitle.getText().toString(), alertPostContent.getText().toString(), mAuth.getUid(),urgencyRating); // TODO USERNAME
 
                     // Post the post!
                     postHelper.postAlert(post);

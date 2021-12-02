@@ -7,9 +7,9 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="10dp"
     android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
     android:scrollbars="vertical"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="10dp"
+    android:backgroundTint="@color/red_t">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,6 @@
 
         <TextView
             android:id="@+id/socialPostContent"
-            style="@style/GenText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -29,8 +28,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/socialPostUsername" />
 
+        <TextView
+            android:id="@+id/socialPostUsername"
+            style="@style/GenText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
