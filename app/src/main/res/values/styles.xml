@@ -5,6 +5,11 @@
         <item name="android:fontFamily">sans-serif-black</item>
     </style>
 
+    <style name="GenText2" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/dark_grey_2</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <style name="BtnTxt" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif-black</item>

@@ -37,7 +37,6 @@ public class NewPostHelper {
 
     /**
      * Save a new market post to Database
-     * TODO UID
      */
     public void postMarket(MarketPost post) {
         // Add post to users posts
@@ -46,7 +45,6 @@ public class NewPostHelper {
 
     /**
      * Save a new alert post to Database
-     * TODO UID
      */
     public void postAlert(AlertPost post) {
         // Add post to users posts

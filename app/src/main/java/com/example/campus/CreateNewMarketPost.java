@@ -39,7 +39,8 @@ public class CreateNewMarketPost extends AppCompatActivity {
                     MarketPost post = new MarketPost(salePostTitle.getText().toString(),
                             salePostPhone.getText().toString(),
                             salePostDescription.getText().toString(),
-                            mAuth.getUid()); // TODO Username
+                            mAuth.getCurrentUser().getDisplayName(),
+                            mAuth.getUid());
 
                     // Post the post!
                     postHelper.postMarket(post);
