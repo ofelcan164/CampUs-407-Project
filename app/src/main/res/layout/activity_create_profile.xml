@@ -94,7 +94,7 @@
 
     <EditText
         android:id="@+id/username_edit_create"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -108,7 +108,7 @@
 
     <EditText
         android:id="@+id/year_edit_create"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -122,7 +122,7 @@
 
     <EditText
         android:id="@+id/major_edit_create"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -136,7 +136,7 @@
 
     <EditText
         android:id="@+id/phone_edit_create"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"

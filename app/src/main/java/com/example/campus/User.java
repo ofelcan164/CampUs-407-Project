@@ -15,6 +15,13 @@ public class User {
     //    private boolean useCurLocation;
 
     /**
+     * No arg constructor
+     */
+    public User() {
+
+    }
+
+    /**
      * Constructor
      */
     public User(String username, String password, String email, String phone, String year, String major, String UID) {
@@ -34,15 +41,27 @@ public class User {
     public String getUsername() {
         return this.username;
     }
+
     public String getPassword() {
         return this.password;
     }
+
     public String getPhone() {
         return phone;
     }
+
     public String getEmail() {
         return email;
     }
+
+    public String getYear() {
+        return year;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
     public String getUID() {
         return UID;
     }
@@ -51,6 +70,7 @@ public class User {
     public void setUsername(String newUsername) {
         this.username = newUsername;
     }
+
     public void setPassword(String newPassword) {
         this.password = newPassword;
     }
@@ -61,6 +81,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
     }
 
     public void setUID(String UID) {
