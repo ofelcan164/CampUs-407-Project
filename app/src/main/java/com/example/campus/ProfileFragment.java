@@ -113,6 +113,7 @@ public class ProfileFragment extends Fragment {
                         year.setText(user.getYear());
                         major.setText(user.getMajor());
                         phone.setText(user.getPhone());
+                        break;
                     }
                 }
             }

@@ -26,6 +26,9 @@
             android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".OtherProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainFeedsActivity"
             android:exported="false"
             android:label="@string/title_activity_main_feeds" />

@@ -1,5 +1,7 @@
 package com.example.campus;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,18 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
         holder.username.setText(post.getUsername());
         holder.description.setText(post.getDescription());
         holder.number.setText(post.getPhoneNum());
+
+        holder.username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // View another user's profile
+                Context context = view.getContext();
+                Intent intent = new Intent(context, OtherProfileActivity.class);
+                intent.putExtra("uid", post.getUID());
+                intent.putExtra("back", "market");
+                context.startActivity(intent);
+            }
+        });
     }
 
     /**
