@@ -6,13 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,7 +37,7 @@ public class SignIn extends AppCompatActivity {
         // SharedPreferences Interaction
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
-        // Fireabase auth
+        // Firebase auth
         mAuth = FirebaseAuth.getInstance();
 
         // Check for saved email and password
@@ -76,10 +73,12 @@ public class SignIn extends AppCompatActivity {
     }
 
     public void signInClicked() {
-        emailEditText = (EditText) findViewById(R.id.username);
-        passwordEditText = (EditText) findViewById(R.id.password);
+        emailEditText = (EditText) findViewById(R.id.email_signin);
+        passwordEditText = (EditText) findViewById(R.id.password_signin);
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
+
+
 
         if (email == null || email.equals("")) {
             emailEditText.setError("Please enter an email");
@@ -92,7 +91,7 @@ public class SignIn extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        sharedPreferences.edit().putString("email", email).apply();
+                        sharedPreferences.edit().putString("email", email).apply(); // TODO SOMETHING ABOUT DISPLAYNAME
                         sharedPreferences.edit().putString("password", password).apply();
                         startActivity(new Intent(SignIn.this, MainFeedsActivity.class));
                     } else {

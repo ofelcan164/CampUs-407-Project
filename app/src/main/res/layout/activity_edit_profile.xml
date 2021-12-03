@@ -18,7 +18,7 @@
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/saved_location_text_edit"
-        app:layout_constraintVertical_bias="0.100000024" />
+        app:layout_constraintVertical_bias="0.050000012" />
 
     <TextView
         android:id="@+id/major_text_edit_profile"
@@ -122,11 +122,11 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_profile_picture"
-        app:layout_constraintVertical_bias="0.10" />
+        app:layout_constraintVertical_bias="0.15" />
 
-    <EditText
+    <TextView
         android:id="@+id/email_edit_edit_profile"
-        style="@style/GenEditTxt"
+        style="@style/GenText2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -140,7 +140,7 @@
 
     <EditText
         android:id="@+id/year_edit_edit_profile"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -154,7 +154,7 @@
 
     <EditText
         android:id="@+id/major_edit_edit_profile"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -168,7 +168,7 @@
 
     <EditText
         android:id="@+id/phone_edit_edit_profile"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -182,7 +182,7 @@
 
     <EditText
         android:id="@+id/saved_location_edit_edit"
-        style="@style/GenEditTxt"
+        style="@style/GenEditTxt2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -219,5 +219,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location_check_edit_profile"
         app:layout_constraintVertical_bias="0.15" />
+
+    <TextView
+        android:id="@+id/editProfileUsername"
+        style="@style/GenText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/email_edit_edit_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_picture"
+        app:layout_constraintVertical_bias="0.050000012" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

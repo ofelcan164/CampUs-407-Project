@@ -6,6 +6,7 @@ public class AlertPost {
     private String content;
     private String UID;
     private String urgencyRating;
+    private String username;
 
     /**
      * Default no-arg constructor for Firebase deserialization
@@ -13,11 +14,12 @@ public class AlertPost {
     public AlertPost() {
     }
 
-    public AlertPost(String title, String content, String UID, String urgencyRating) {
+    public AlertPost(String title, String urgencyRating, String content, String username, String UID) {
         this.title = title;
         this.content = content;
         this.urgencyRating = urgencyRating;
         this.UID = UID;
+        this.username = username;
     }
 
     // Getters
@@ -37,8 +39,11 @@ public class AlertPost {
         return this.urgencyRating;
     }
 
-    // Setters
+    public String getUsername() {
+        return username;
+    }
 
+    // Setters
     public void setTitle(String title) {
         this.title = title;
     }
@@ -53,5 +58,9 @@ public class AlertPost {
 
     public void setUrgencyRating(String urgencyRating) {
         this.urgencyRating = urgencyRating;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

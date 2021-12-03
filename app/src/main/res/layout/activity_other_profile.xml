@@ -7,23 +7,7 @@
     tools:context=".ProfileFragment">
 
     <TextView
-        android:id="@+id/saved_location_text_profile"
-        style="@style/GenText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="20dp"
-        android:text="Saved Location:"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone_text_profile"
-        app:layout_constraintVertical_bias="0.050000012" />
-
-    <TextView
-        android:id="@+id/major_text_profile"
+        android:id="@+id/major_text_other_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,11 +18,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/year_text_profile"
+        app:layout_constraintTop_toBottomOf="@+id/year_text_other_profile"
         app:layout_constraintVertical_bias="0.05" />
 
     <TextView
-        android:id="@+id/phone_text_profile"
+        android:id="@+id/phone_text_other_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,11 +33,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/major_text_profile"
+        app:layout_constraintTop_toBottomOf="@+id/major_text_other_profile"
         app:layout_constraintVertical_bias="0.05" />
 
     <TextView
-        android:id="@+id/email_text_profile"
+        android:id="@+id/email_text_other_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,72 +52,59 @@
         app:layout_constraintVertical_bias="0.15" />
 
     <TextView
-        android:id="@+id/email_edit_profile"
+        android:id="@+id/email_other_profile"
         style="@style/GenText2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="20dp"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/email_text_profile"
+        app:layout_constraintBottom_toBottomOf="@+id/email_text_other_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/email_text_profile"
-        app:layout_constraintTop_toTopOf="@+id/email_text_profile" />
+        app:layout_constraintStart_toEndOf="@+id/email_text_other_profile"
+        app:layout_constraintTop_toTopOf="@+id/email_text_other_profile" />
 
     <TextView
-        android:id="@+id/year_edit_profile"
+        android:id="@+id/year_other_profile"
         style="@style/GenText2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="20dp"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/year_text_profile"
+        app:layout_constraintBottom_toBottomOf="@+id/year_text_other_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/year_text_profile"
-        app:layout_constraintTop_toTopOf="@+id/year_text_profile" />
+        app:layout_constraintStart_toEndOf="@+id/year_text_other_profile"
+        app:layout_constraintTop_toTopOf="@+id/year_text_other_profile" />
 
     <TextView
-        android:id="@+id/major_edit_profile"
+        android:id="@+id/major_other_profile"
         style="@style/GenText2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="20dp"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/major_text_profile"
+        app:layout_constraintBottom_toBottomOf="@+id/major_text_other_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/major_text_profile"
-        app:layout_constraintTop_toTopOf="@+id/major_text_profile" />
+        app:layout_constraintStart_toEndOf="@+id/major_text_other_profile"
+        app:layout_constraintTop_toTopOf="@+id/major_text_other_profile" />
 
     <TextView
-        android:id="@+id/phone_edit_profile"
+        android:id="@+id/phone_other_profile"
         style="@style/GenText2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="20dp"
         android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/phone_text_profile"
+        app:layout_constraintBottom_toBottomOf="@+id/phone_text_other_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/phone_text_profile"
-        app:layout_constraintTop_toTopOf="@+id/phone_text_profile" />
+        app:layout_constraintStart_toEndOf="@+id/phone_text_other_profile"
+        app:layout_constraintTop_toTopOf="@+id/phone_text_other_profile" />
 
     <TextView
-        android:id="@+id/saved_location_edit_profile"
-        style="@style/GenText2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="20dp"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/saved_location_text_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/saved_location_text_profile"
-        app:layout_constraintTop_toTopOf="@+id/saved_location_text_profile" />
-
-    <TextView
-        android:id="@+id/year_text_profile"
+        android:id="@+id/year_text_other_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -144,7 +115,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_text_profile"
+        app:layout_constraintTop_toBottomOf="@+id/email_text_other_profile"
         app:layout_constraintVertical_bias="0.05" />
 
     <ImageView
@@ -161,48 +132,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.050000012" />
 
-    <ImageView
-        android:id="@+id/edit_profile_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        android:src="@drawable/settings_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/settings_icon"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <CheckBox
-        android:id="@+id/location_check_profile"
-        style="@style/GenText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:buttonTint="@color/red_1"
-        android:text="Use Current Location?"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saved_location_text_profile"
-        app:layout_constraintVertical_bias="0.050000012" />
-
-    <Button
-        android:id="@+id/logoutBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="55dp"
-        android:text="Logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_check_profile"
-        app:layout_constraintVertical_bias="0.050000012" />
-
     <TextView
-        android:id="@+id/profileUsername"
+        android:id="@+id/username_other_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -212,5 +143,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_pic"
         app:layout_constraintVertical_bias="0.050000012" />
+
+    <Button
+        android:id="@+id/back_btn_other_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_other_profile"
+        app:layout_constraintVertical_bias="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

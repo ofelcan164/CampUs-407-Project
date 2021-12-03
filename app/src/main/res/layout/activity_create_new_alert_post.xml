@@ -61,11 +61,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select an Urgency Rating"
+        app:layout_constraintBottom_toTopOf="@+id/addPhotoAlert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/newAlertContent"
-        app:layout_constraintBottom_toTopOf="@id/urgencySpinner"
-        />
+        app:layout_constraintVertical_bias="0.19999999" />
 
     <Spinner
         android:id="@+id/urgencySpinner"
@@ -74,11 +74,12 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
+        android:background="@drawable/spinner_background"
+        app:layout_constraintBottom_toTopOf="@id/addPhotoAlert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/spinner_background"
         app:layout_constraintTop_toBottomOf="@id/urgencySpinnerText"
-        app:layout_constraintBottom_toTopOf="@id/addPhotoAlert"/>
+        app:layout_constraintVertical_bias="0.25" />
 
 
 

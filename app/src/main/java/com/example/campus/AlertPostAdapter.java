@@ -1,5 +1,7 @@
 package com.example.campus;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +39,21 @@ public class AlertPostAdapter extends FirebaseRecyclerAdapter<AlertPost, AlertPo
     public void onBindViewHolder(@NonNull AlertPostAdapter.alertPostViewHolder holder, int position, AlertPost post) {
         // Add posts content to view in XML
         holder.title.setText(post.getTitle());
+        holder.username.setText(post.getUsername());
         holder.content.setText(post.getContent());
         holder.urgencyRating.setText(post.getUrgencyRating());
+
+        holder.username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // View another user's profile
+                Context context = view.getContext();
+                Intent intent = new Intent(context, OtherProfileActivity.class);
+                intent.putExtra("uid", post.getUID());
+                intent.putExtra("back", "alert");
+                context.startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -46,8 +61,9 @@ public class AlertPostAdapter extends FirebaseRecyclerAdapter<AlertPost, AlertPo
      */
     class alertPostViewHolder extends RecyclerView.ViewHolder {
         TextView title;
-        TextView content;
         TextView urgencyRating;
+        TextView content;
+        TextView username;
 
         /**
          * Constructor
@@ -58,6 +74,7 @@ public class AlertPostAdapter extends FirebaseRecyclerAdapter<AlertPost, AlertPo
             title = (TextView) itemView.findViewById(R.id.alertPostTitle);
             content = (TextView) itemView.findViewById(R.id.alertPostContent);
             urgencyRating = (TextView) itemView.findViewById(R.id.alertPostUrgencyRating);
+            username = (TextView) itemView.findViewById(R.id.alertPostUsername);
         }
     }
 }

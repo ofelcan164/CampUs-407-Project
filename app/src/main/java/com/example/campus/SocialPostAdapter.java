@@ -1,5 +1,7 @@
 package com.example.campus;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +38,29 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
     @Override
     public void onBindViewHolder(@NonNull socialPostViewHolder holder, int position, SocialPost post) {
         // Add posts content to view in XML
+        holder.username.setText(post.getUsername());
         holder.content.setText(post.getContent());
+
+        holder.username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // View another user's profile
+                Context context = view.getContext();
+                Intent intent = new Intent(context, OtherProfileActivity.class);
+                intent.putExtra("uid", post.getUID());
+                intent.putExtra("back", "social");
+                context.startActivity(intent);
+            }
+        });
     }
 
     /**
      * Subclass to get references to view objects by ID
      */
     class socialPostViewHolder extends RecyclerView.ViewHolder {
+        TextView username;
         TextView content;
+
 
         /**
          * Constructor
@@ -51,6 +68,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         public socialPostViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            username = (TextView) itemView.findViewById(R.id.socialPostUsername);
             content = (TextView) itemView.findViewById(R.id.socialPostContent);
         }
     }

@@ -1,5 +1,6 @@
 package com.example.campus;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -11,11 +12,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class EditProfileActivity extends AppCompatActivity implements EditUserCredsDialog.EditUserCredsDialogListener {
 
@@ -25,7 +33,8 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
 
     private CheckBox curLocationCheck;
 
-    private EditText emailEditText;
+    private TextView usernameEditText;
+    private TextView emailEditText;
     private EditText majorEditText;
     private EditText phoneEditText;
     private EditText yearEditText;
@@ -35,13 +44,13 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
     private String newPassword;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mRef;
+    private NewUserHelper userHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
-        mAuth = FirebaseAuth.getInstance();
 
         cancel = (Button) findViewById(R.id.edit_profile_cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +77,7 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
         });
 
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
+        newPassword = sharedPreferences.getString("Password", "");
 
         curLocationCheck = (CheckBox) findViewById(R.id.location_check_edit_profile);
         curLocationCheck.setChecked(sharedPreferences.getBoolean("useCurLocation", true));
@@ -78,18 +88,39 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             }
         });
 
-        // TODO TODO
-//        emailEditText = (EditText) findViewById(R.id.email_edit_edit_profile);
-//        emailEditText.setText(mAuth.getCurrentUser().getEmail());
-//
-//        yearEditText = (EditText) findViewById(R.id.year_edit_edit_profile);
-//        yearEditText.setText(getIntent().getStringExtra("year"));
-//
-//        majorEditText = (EditText) findViewById(R.id.major_edit_edit_profile);
-//        majorEditText.setText(getIntent().getStringExtra("major"));
-//
-//        phoneEditText = (EditText) findViewById(R.id.phone_edit_edit_profile);
-//        phoneEditText.setText(mAuth.getCurrentUser().getPhoneNumber());
+        // Set up textview information
+        usernameEditText = (TextView) findViewById(R.id.editProfileUsername);
+        emailEditText = (TextView) findViewById(R.id.email_edit_edit_profile);
+        yearEditText = (EditText) findViewById(R.id.year_edit_edit_profile);
+        majorEditText = (EditText) findViewById(R.id.major_edit_edit_profile);
+        phoneEditText = (EditText) findViewById(R.id.phone_edit_edit_profile);
+
+        // Database interaction
+        mRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mAuth = FirebaseAuth.getInstance();
+        userHelper = new NewUserHelper();
+
+        // Set the values
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    User user = ds.getValue(User.class);
+                    if (user.getUID().equals(mAuth.getUid())) {
+                        usernameEditText.setText(user.getUsername());
+                        emailEditText.setText(user.getEmail());
+                        yearEditText.setText(user.getYear());
+                        majorEditText.setText(user.getMajor());
+                        phoneEditText.setText(user.getPhone());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     private void onCancelClicked() {
@@ -103,7 +134,6 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             return;
         }
         else {
-            // TODO EMAIL VERIFICATION??
             if (!newPassword.equals("")) {
                 FirebaseUser curUser = mAuth.getCurrentUser();
                 curUser.updatePassword(newPassword);
@@ -115,8 +145,29 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                 Toast.makeText(getApplicationContext(), "Password updated!", Toast.LENGTH_SHORT).show();
             }
 
-            // Other none credential based user info
+            // Save info to database
+            String phone = phoneEditText.getText().toString();
+            String year = yearEditText.getText().toString();
+            String major = majorEditText.getText().toString();
+            if (phone == null || phone.equals("")) {
+                phoneEditText.setError("Please enter your phone number");
+                return;
+            }
+            if (year == null || year.equals("")) {
+                yearEditText.setError("Please enter your year in school");
+                return;
+            }
+            if (major == null || major.equals("")) {
+                majorEditText.setError("Please enter your major");
+                return;
+            }
 
+            userHelper.saveUser(new User(usernameEditText.getText().toString(),
+                    sharedPreferences.getString("password", ""),
+                    emailEditText.getText().toString(),
+                    phone,
+                    year, major,
+                    mAuth.getCurrentUser().getUid()));
 
             startActivity(new Intent(this, MainFeedsActivity.class).putExtra("select", "profile"));
         }
