@@ -4,40 +4,94 @@ public class User {
     // Private instance fields
     private String username;
     private String password;
-    private double savedLocationLat;
-    private double savedLocationLng;
-    private boolean useCurLocation;
+    private String phone;
+    private String email;
+    private String year;
+    private String major;
+    private String UID;
+
+    //    private double savedLocationLat;
+    //    private double savedLocationLng;
+    //    private boolean useCurLocation;
+
+    /**
+     * No arg constructor
+     */
+    public User() {
+
+    }
 
     /**
      * Constructor
      */
-    public User(String username, String password, double savedLocationLat, double savedLocationLng, boolean useCurLocation) {
+    public User(String username, String password, String email, String phone, String year, String major, String UID) {
         this.username = username;
         this.password = password;
-        this.savedLocationLat = savedLocationLat;
-        this.savedLocationLng = savedLocationLng;
-        this.useCurLocation = useCurLocation;
-    }
-
-    /**
-     * Initialize a user (after creation) with default values for savedLocationLat, savedLocationLng, useCurLocation
-     */
-    public static User initUser(String username, String password) {
-        return new User(username, password, 100, 200, true); // TODO DEFAULT TO TRUE FOR LOC?
+        this.phone = phone;
+        this.email = email;
+        this.year = year;
+        this.major = major;
+        this.UID = UID;
+//        this.savedLocationLat = savedLocationLat;
+//        this.savedLocationLng = savedLocationLng;
+//        this.useCurLocation = useCurLocation;
     }
 
     // Getters
-    public String getUsername() { return this.username; }
-    public String getPassword() { return this.password; }
-    public double getSavedLocationLat() { return this.savedLocationLat; }
-    public double getSaveLocationLng() { return this.savedLocationLng; }
-    public boolean getUseCurLocation() { return this.useCurLocation; }
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public String getUID() {
+        return UID;
+    }
 
     // Setters
-    public void setUsername(String newUsername) { this.username = newUsername; }
-    public void setPassword(String newPassword) { this.password = newPassword; }
-    public void setSavedLocationLat(double newLat) { this.savedLocationLat = newLat; }
-    public void setSaveLocationLng(double newLng) { this.savedLocationLng = newLng; }
-    public void setUseCurLocation(boolean newCurLocation) { this.useCurLocation = newCurLocation; }
+    public void setUsername(String newUsername) {
+        this.username = newUsername;
+    }
 
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public void setUID(String UID) {
+        this.UID = UID;
+    }
 }

@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class CreateProfile extends AppCompatActivity implements CreateUserCredsDialog.CreateUserCredsDialogListener {
 
@@ -79,7 +80,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         });
 
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
-
     }
 
     /**
@@ -109,7 +109,15 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
             return;
         }
 
-        // Valid user, register with Firebase Authenticaion
+        // Get user info
+        String username = ((EditText) findViewById(R.id.username_edit_create)).getText().toString();
+        String year = ((EditText) findViewById(R.id.year_edit_create)).getText().toString();
+        String major = ((EditText) findViewById(R.id.major_edit_create)).getText().toString();
+        String phone = ((EditText) findViewById(R.id.phone_edit_create)).getText().toString();
+
+        NewUserHelper userHelper = new NewUserHelper();
+
+        // Valid user, register with Firebase Authentication
         mAuth.createUserWithEmailAndPassword(emailFromDialog, passwordFromDialog1)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -120,6 +128,16 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                             sharedPreferences.edit().putString("email", emailFromDialog).apply();
                             sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
 
+                            // Save username as DisplayName
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .build();
+                            FirebaseUser curUser = mAuth.getCurrentUser();
+                            curUser.updateProfile(profileUpdates);
+
+                            // Save all user info
+                            userHelper.saveUser(new User(username, passwordFromDialog1, emailFromDialog, phone, year, major, curUser.getUid()));
+
                             startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
                         } else {
                             Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
@@ -127,6 +145,8 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
 //                        progressDialog.dismiss();
                     }
                 });
+
+
 
     }
 

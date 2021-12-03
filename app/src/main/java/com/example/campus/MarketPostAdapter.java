@@ -37,6 +37,7 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
     public void onBindViewHolder(@NonNull MarketPostAdapter.marketPostViewHolder holder, int position, MarketPost post) {
         // Add posts content to view in XML
         holder.title.setText(post.getTitle());
+        holder.username.setText(post.getUsername());
         holder.description.setText(post.getDescription());
         holder.number.setText(post.getPhoneNum());
     }
@@ -46,6 +47,7 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
      */
     class marketPostViewHolder extends RecyclerView.ViewHolder {
         TextView title;
+        TextView username;
         TextView number;
         TextView description;
 
@@ -56,6 +58,7 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.marketPostTitle);
+            username = (TextView) itemView.findViewById(R.id.marketPostUsername);
             number = (TextView) itemView.findViewById(R.id.marketPostNumber);
             description = (TextView) itemView.findViewById(R.id.marketPostDescription);
         }

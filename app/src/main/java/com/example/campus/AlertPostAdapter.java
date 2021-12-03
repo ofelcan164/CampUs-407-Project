@@ -37,6 +37,7 @@ public class AlertPostAdapter extends FirebaseRecyclerAdapter<AlertPost, AlertPo
     public void onBindViewHolder(@NonNull AlertPostAdapter.alertPostViewHolder holder, int position, AlertPost post) {
         // Add posts content to view in XML
         holder.title.setText(post.getTitle());
+        holder.username.setText(post.getUsername());
         holder.content.setText(post.getContent());
         holder.urgencyRating.setText(post.getUrgencyRating());
     }
@@ -46,8 +47,9 @@ public class AlertPostAdapter extends FirebaseRecyclerAdapter<AlertPost, AlertPo
      */
     class alertPostViewHolder extends RecyclerView.ViewHolder {
         TextView title;
-        TextView content;
         TextView urgencyRating;
+        TextView content;
+        TextView username;
 
         /**
          * Constructor
@@ -58,6 +60,7 @@ public class AlertPostAdapter extends FirebaseRecyclerAdapter<AlertPost, AlertPo
             title = (TextView) itemView.findViewById(R.id.alertPostTitle);
             content = (TextView) itemView.findViewById(R.id.alertPostContent);
             urgencyRating = (TextView) itemView.findViewById(R.id.alertPostUrgencyRating);
+            username = (TextView) itemView.findViewById(R.id.alertPostUsername);
         }
     }
 }
