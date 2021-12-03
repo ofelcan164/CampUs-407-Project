@@ -1,5 +1,7 @@
 package com.example.campus;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,18 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         // Add posts content to view in XML
         holder.username.setText(post.getUsername());
         holder.content.setText(post.getContent());
+
+        holder.username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // View another user's profile
+                Context context = view.getContext();
+                Intent intent = new Intent(context, OtherProfileActivity.class);
+                intent.putExtra("uid", post.getUID());
+                intent.putExtra("back", "social");
+                context.startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -46,6 +60,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
     class socialPostViewHolder extends RecyclerView.ViewHolder {
         TextView username;
         TextView content;
+
 
         /**
          * Constructor

@@ -112,6 +112,7 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                         yearEditText.setText(user.getYear());
                         majorEditText.setText(user.getMajor());
                         phoneEditText.setText(user.getPhone());
+                        break;
                     }
                 }
             }
