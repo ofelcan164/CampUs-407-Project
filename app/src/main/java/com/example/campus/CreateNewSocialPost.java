@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,13 +26,14 @@ import java.io.ByteArrayOutputStream;
 public class CreateNewSocialPost extends AppCompatActivity {
 
     FirebaseAuth mAuth;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    ImageView imageViewSocial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_social_post);
-        ImageView imageView = findViewById(R.id.imageViewSocial);
-        imageView.setImageDrawable(null);
+        imageViewSocial = findViewById(R.id.imageViewSocial);
 
         // Post helper instance
         NewPostHelper postHelper = new NewPostHelper();
@@ -42,7 +45,9 @@ public class CreateNewSocialPost extends AppCompatActivity {
         uploadPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upload(v);
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                // upload(v);
             }
         });
 
@@ -53,7 +58,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
                 // Get post info
                 EditText socialPostContent = (EditText) findViewById(R.id.newSocialPostContent);
                 if (socialPostContent.getText().toString() != null && !socialPostContent.getText().toString().equals("")) {
-                    SocialPost post = new SocialPost(socialPostContent.getText().toString(), mAuth.getCurrentUser().getDisplayName(), mAuth.getUid());
+                    SocialPost post = new SocialPost(socialPostContent.getText().toString(), mAuth.getCurrentUser().getDisplayName(), mAuth.getUid(), imageViewSocial);
 
                     // Post the post!
                     postHelper.postSocial(post);
@@ -69,7 +74,16 @@ public class CreateNewSocialPost extends AppCompatActivity {
         });
     }
 
-    public void upload(View view) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            imageViewSocial.setImageURI(selectedImage);
+        }
+    }
+
+    /*public void upload(View view) {
         try{
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
             StorageReference socialPhotoRef = storageRef.child("images/badgerGame");
@@ -78,7 +92,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] socialPhotoByteStream = baos.toByteArray();
-            UploadTask uploadTask = socialPhotoRef.putBytes(socialPhotoByteStream);
+            UploadTask uploadTask = upload(imageViewSocial);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -90,5 +104,5 @@ public class CreateNewSocialPost extends AppCompatActivity {
             e.printStackTrace();
             Log.i("Error", "Image upload failed.");
         }
-    }
+    }*/
 }
