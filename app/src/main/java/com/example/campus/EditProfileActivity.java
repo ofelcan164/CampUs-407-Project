@@ -2,14 +2,21 @@ package com.example.campus;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,6 +30,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,11 +52,13 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
     private Button cancel;
     private Button save;
     private Button editCreds;
+    private Button saveLocBtn;
     private Button editPhotoBtn;
-    private static final int RESULT_LOAD_IMAGE = 1;
-    ImageView editProfilePictureImageView;
     private CheckBox curLocationCheck;
-
+  
+    private static final int RESULT_LOAD_IMAGE = 1;
+  
+    ImageView editProfilePictureImageView;
     private TextView usernameEditText;
     private TextView emailEditText;
     private EditText majorEditText;
@@ -62,6 +73,8 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
     private DatabaseReference mRef;
     private NewUserHelper userHelper;
 
+    private LocationListener locationListener;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,15 +115,23 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             }
         });
 
+        saveLocBtn = (Button) findViewById(R.id.edit_save_cur_location);
+        saveLocBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveCurLocation();
+            }
+        });
+
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
-        newPassword = sharedPreferences.getString("Password", "");
+        newPassword = sharedPreferences.getString("password", "");
 
         curLocationCheck = (CheckBox) findViewById(R.id.location_check_edit_profile);
-        curLocationCheck.setChecked(sharedPreferences.getBoolean("useCurLocation", true));
+        curLocationCheck.setChecked(sharedPreferences.getBoolean("use_cur_loc", false));
         curLocationCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onCurLocationChecked(view);
+                onCurLocationChecked();
             }
         });
 
@@ -149,6 +170,25 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+        // Location services
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+            }
+        };
+        // Prompt user for location permissions TODO
+        if (Build.VERSION.SDK_INT < 23) {
+            startListening();
+        } else {
+            // Request permissions if necessary
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            } else {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
+        }
     }
 
     private void onCancelClicked() {
@@ -160,9 +200,9 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             Toast.makeText(getApplicationContext(), "Passwords much both be matching and valid [6 characters or more]", Toast.LENGTH_SHORT).show();
             openEditCredsDialog();
             return;
-        }
-        else {
-            if (!newPassword.equals("")) {
+        } else {
+            if (!newPassword.equals("") && newPassword != null
+            && !newPassword.equals(sharedPreferences.getString("password", ""))) {
                 FirebaseUser curUser = mAuth.getCurrentUser();
                 curUser.updatePassword(newPassword);
 
@@ -194,7 +234,10 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                     sharedPreferences.getString("password", ""),
                     emailEditText.getText().toString(),
                     phone,
-                    year, major,
+                    year,
+                    major,
+                    sharedPreferences.getFloat("user_lat", 0),
+                    sharedPreferences.getFloat("user_lng", 0),
                     mAuth.getCurrentUser().getUid()));
 
             try{
@@ -268,8 +311,80 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
     /**
      * Update the whether user is using current location
      */
-    private void onCurLocationChecked(View view) {
-        sharedPreferences.edit().putBoolean("useCurLocation", ((CheckBox) view).isChecked()).apply();
+    private void onCurLocationChecked() {
+        sharedPreferences.edit().putBoolean("use_cur_loc", curLocationCheck.isChecked()).apply(); // Update the whether user is using current location
+
+        // Update SharedPreferences based on location configuration
+        if (sharedPreferences.getBoolean("use_cur_loc", false)) {
+            // Update SharedPreferences user_lat and user_lng with current location
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                // Put locations
+                sharedPreferences.edit().putFloat("user_lat", (float)location.getLatitude()).apply();
+                sharedPreferences.edit().putFloat("user_lng", (float)location.getLongitude()).apply();
+            }
+            // TODO
+            else {
+                Toast.makeText(this, "LOCATION PERMISSIONS NOT GRANTED????", Toast.LENGTH_LONG).show(); // TODO
+            }
+        }
+        else {
+            // Update SharedPreferences user_lat and user_lng with saved location
+            if (mAuth.getCurrentUser() != null) {
+                mRef.child(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        User user = task.getResult().getValue(User.class);
+
+                        // Add location to SharedPreferences
+                        sharedPreferences.edit().putFloat("user_lat", (float)user.getLat()).apply();
+                        sharedPreferences.edit().putFloat("user_lng", (float)user.getLng()).apply();
+                    }
+                });
+            }
+        }
+
+        Toast.makeText(this, "Updated location configuration to "
+                + ((curLocationCheck.isChecked()) ? "use current location." : "use saved location."), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Save current location to database for user
+     */
+    private void saveCurLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            // Save location to the user
+            mRef.child(mAuth.getUid()).child("lat").setValue(location.getLatitude());
+            mRef.child(mAuth.getUid()).child("lng").setValue(location.getLongitude());
+        }
+    }
+
+    /**
+     * When permission for location services is requested
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startListening();
+        }
+    }
+
+    /**
+     * Assign the LocationManager (when permission is granted)
+     */
+    public void startListening() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        }
     }
 
     /**

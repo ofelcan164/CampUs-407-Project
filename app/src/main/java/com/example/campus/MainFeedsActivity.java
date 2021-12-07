@@ -70,22 +70,6 @@ public class MainFeedsActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                // TODO
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-                // TODO
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-                // TODO
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                // TODO
             }
         };
 
@@ -99,10 +83,6 @@ public class MainFeedsActivity extends AppCompatActivity {
 
             } else {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (location != null) {
-                    // TODO
-                }
             }
         }
 

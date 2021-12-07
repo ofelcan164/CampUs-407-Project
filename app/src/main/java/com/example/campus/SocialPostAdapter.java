@@ -60,7 +60,6 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         TextView username;
         TextView content;
 
-
         /**
          * Constructor
          */
