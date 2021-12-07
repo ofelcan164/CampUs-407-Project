@@ -1,13 +1,22 @@
 package com.example.campus;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Trace;
@@ -19,7 +28,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -42,11 +54,13 @@ public class ProfileFragment extends Fragment {
     private TextView major;
     private TextView phone;
 
-
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
     private NewUserHelper userHelper;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -82,11 +96,11 @@ public class ProfileFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
         curLocationCheck = (CheckBox) v.findViewById(R.id.location_check_profile);
-        curLocationCheck.setChecked(sharedPreferences.getBoolean("useCurLocation", true));
+        curLocationCheck.setChecked(sharedPreferences.getBoolean("use_cur_loc", false));
         curLocationCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onCurLocationChecked(view);
+                onCurLocationChecked();
             }
         });
 
@@ -123,18 +137,77 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // Location services
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+            }
+        };
+        // Prompt user for location permissions TODO
+        if (Build.VERSION.SDK_INT < 23) {
+            startListening();
+        } else {
+            // Request permissions if necessary
+            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            } else {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
+        }
+
         // Return fragment view
         return v;
     }
 
     private void editProfileIconClicked() {
         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-//        intent.putExtra("year", ); TODO
-//        intent.putExtra("major", );
         startActivity(intent);
     }
 
-    private void onCurLocationChecked(View view) {
-        sharedPreferences.edit().putBoolean("useCurLocation", ((CheckBox) view).isChecked()).apply(); // Update the whethere user is using current location
+    /**
+     * Update the whether user is using current location
+     */
+    private void onCurLocationChecked() {
+        sharedPreferences.edit().putBoolean("use_cur_loc", curLocationCheck.isChecked()).apply(); // Update the whether user is using current location
+
+        // Update SharedPreferences based on location configuration
+        if (sharedPreferences.getBoolean("user_cur_loc", false)) {
+            // Update SharedPreferences user_lat and user_lng with current location
+            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                // Put locations
+                sharedPreferences.edit().putFloat("user_lat", (float) location.getLatitude()).apply();
+                sharedPreferences.edit().putFloat("user_lng", (float) location.getLongitude()).apply();
+            }
+        }
+        else {
+            // Update SharedPreferences user_lat and user_lng with saved location
+            if (mAuth.getCurrentUser() != null) {
+                mRef.child(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        User user = task.getResult().getValue(User.class);
+
+                        // Add location to SharedPreferences
+                        sharedPreferences.edit().putFloat("user_lat", (float)user.getLat()).apply();
+                        sharedPreferences.edit().putFloat("user_lng", (float)user.getLng()).apply();
+                    }
+                });
+            }
+        }
+
+        Toast.makeText(getActivity().getApplicationContext(), "Updated location configuration to "
+                + ((curLocationCheck.isChecked()) ? "use current location." : "use saved location."), Toast.LENGTH_SHORT);
+    }
+
+    /**
+     * Assign the LocationManager (when permission is granted)
+     */
+    public void startListening() {
+        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        }
     }
 }
