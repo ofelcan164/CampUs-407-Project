@@ -7,14 +7,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,13 +30,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class EditProfileActivity extends AppCompatActivity implements EditUserCredsDialog.EditUserCredsDialogListener {
 
     private Button cancel;
     private Button save;
     private Button editCreds;
-
+    private Button editPhotoBtn;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    ImageView editProfilePictureImageView;
     private CheckBox curLocationCheck;
 
     private TextView usernameEditText;
@@ -47,10 +60,21 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
     private DatabaseReference mRef;
     private NewUserHelper userHelper;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        editProfilePictureImageView = findViewById(R.id.editProfilePictureImageView);
+        editPhotoBtn = (Button) findViewById(R.id.edit_profile_picture);
+        editPhotoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+            }
+        });
 
         cancel = (Button) findViewById(R.id.edit_profile_cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +194,42 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                     mAuth.getCurrentUser().getUid()));
 
             startActivity(new Intent(this, MainFeedsActivity.class).putExtra("select", "profile"));
+        }
+        try{
+            editProfilePictureImageView.setDrawingCacheEnabled(true);
+            editProfilePictureImageView.buildDrawingCache();
+            Bitmap bitmap = editProfilePictureImageView.getDrawingCache();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] socialPhotoByteStream = baos.toByteArray();
+
+            String baseFolder = "profilePictures/";
+            String imageFilePath = baseFolder.concat(mAuth.getUid());
+
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference imageRef = storageRef.child(imageFilePath);
+
+            UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("Error", "Image upload failed. Error:" + e);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            editProfilePictureImageView.setImageURI(selectedImage);
         }
     }
 
