@@ -7,22 +7,6 @@
     tools:context=".ProfileFragment">
 
     <TextView
-        android:id="@+id/saved_location_text_profile"
-        style="@style/GenText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="20dp"
-        android:text="Saved Location:"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone_text_profile"
-        app:layout_constraintVertical_bias="0.050000012" />
-
-    <TextView
         android:id="@+id/major_text_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
@@ -120,19 +104,6 @@
         app:layout_constraintTop_toTopOf="@+id/phone_text_profile" />
 
     <TextView
-        android:id="@+id/saved_location_edit_profile"
-        style="@style/GenText2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="20dp"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/saved_location_text_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/saved_location_text_profile"
-        app:layout_constraintTop_toTopOf="@+id/saved_location_text_profile" />
-
-    <TextView
         android:id="@+id/year_text_profile"
         style="@style/GenText"
         android:layout_width="wrap_content"
@@ -179,14 +150,15 @@
         style="@style/GenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
         android:buttonTint="@color/red_1"
         android:text="Use Current Location?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saved_location_text_profile"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintTop_toBottomOf="@+id/phone_text_profile"
+        app:layout_constraintVertical_bias="0.19999999" />
 
     <Button
         android:id="@+id/logoutBtn"
@@ -199,7 +171,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location_check_profile"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/profileUsername"

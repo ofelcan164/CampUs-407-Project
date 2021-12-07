@@ -4,11 +4,19 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,9 +42,11 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
     private String passwordFromDialog2;
     private String emailFromDialog;
     private EditText username;
-    private ProgressDialog progressDialog;
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +76,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         });
 
         username = (EditText) findViewById(R.id.username_edit_create);
-        progressDialog = new ProgressDialog(this);
         createBtn = (Button) findViewById(R.id.create);
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +89,14 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         });
 
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
+
+        // Set up location services
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+            }
+        };
     }
 
     /**
@@ -94,60 +111,76 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
      * User information is valid, register user with Firebase Authentication
      */
     private void Register() {
-//        progressDialog.setMessage("Please wait...");
-//        progressDialog.show();
-//        progressDialog.setCanceledOnTouchOutside(false);
+        // Prompt user for location permissions
+        if (Build.VERSION.SDK_INT < 23) {
+            startListening();
+        } else {
+            // Request permissions if necessary
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            } else {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        // Validate user-inputted credentials
-        if (emailFromDialog == null) {
-            Toast.makeText(getApplicationContext(), "Must enter a wisc.edu email", Toast.LENGTH_SHORT).show();
-            openCredsDialog();
-            return;
-        } else if (passwordFromDialog1 == null || passwordFromDialog2 == null) {
-            Toast.makeText(getApplicationContext(), "Must enter and confirm a valid password [6 characters or more]", Toast.LENGTH_SHORT).show();
-            openCredsDialog();
-            return;
+                // Validate user-inputted credentials
+                if (emailFromDialog == null) {
+                    Toast.makeText(getApplicationContext(), "Must enter a wisc.edu email", Toast.LENGTH_SHORT).show();
+                    openCredsDialog();
+                    return;
+                } else if (passwordFromDialog1 == null || passwordFromDialog2 == null) {
+                    Toast.makeText(getApplicationContext(), "Must enter and confirm a valid password [6 characters or more]", Toast.LENGTH_SHORT).show();
+                    openCredsDialog();
+                    return;
+                }
+
+                // Get user info
+                String username = ((EditText) findViewById(R.id.username_edit_create)).getText().toString();
+                String year = ((EditText) findViewById(R.id.year_edit_create)).getText().toString();
+                String major = ((EditText) findViewById(R.id.major_edit_create)).getText().toString();
+                String phone = ((EditText) findViewById(R.id.phone_edit_create)).getText().toString();
+
+                NewUserHelper userHelper = new NewUserHelper();
+
+                // Valid user, register with Firebase Authentication
+                mAuth.createUserWithEmailAndPassword(emailFromDialog, passwordFromDialog1)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
+
+                                    sharedPreferences.edit().putString("email", emailFromDialog).apply();
+                                    sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
+                                    sharedPreferences.edit().putFloat("user_lat", (float)location.getLatitude()).apply();
+                                    sharedPreferences.edit().putFloat("user_lng", (float)location.getLongitude()).apply();
+                                    sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
+
+                                    // Save username as DisplayName
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(username)
+                                            .build();
+                                    FirebaseUser curUser = mAuth.getCurrentUser();
+                                    curUser.updateProfile(profileUpdates);
+
+                                    // Save all user info
+                                    userHelper.saveUser(new User(username,
+                                            passwordFromDialog1,
+                                            emailFromDialog,
+                                            phone,
+                                            year,
+                                            major,
+                                            location.getLatitude(),
+                                            location.getLongitude(),
+                                            curUser.getUid()));
+
+                                    startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
+                                } else {
+                                    Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+            }
         }
-
-        // Get user info
-        String username = ((EditText) findViewById(R.id.username_edit_create)).getText().toString();
-        String year = ((EditText) findViewById(R.id.year_edit_create)).getText().toString();
-        String major = ((EditText) findViewById(R.id.major_edit_create)).getText().toString();
-        String phone = ((EditText) findViewById(R.id.phone_edit_create)).getText().toString();
-
-        NewUserHelper userHelper = new NewUserHelper();
-
-        // Valid user, register with Firebase Authentication
-        mAuth.createUserWithEmailAndPassword(emailFromDialog, passwordFromDialog1)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
-
-                            sharedPreferences.edit().putString("email", emailFromDialog).apply();
-                            sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
-
-                            // Save username as DisplayName
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(username)
-                                    .build();
-                            FirebaseUser curUser = mAuth.getCurrentUser();
-                            curUser.updateProfile(profileUpdates);
-
-                            // Save all user info
-                            userHelper.saveUser(new User(username, passwordFromDialog1, emailFromDialog, phone, year, major, curUser.getUid()));
-
-                            startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
-                        } else {
-                            Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
-                        }
-//                        progressDialog.dismiss();
-                    }
-                });
-
-
-
     }
 
     /**
@@ -158,48 +191,30 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         dialog.show(getSupportFragmentManager(), "create_creds");
     }
 
-//    public void createClicked() {
-//        EditText email = (EditText) findViewById(R.id.email_edit_create);
-//        if (email.getText().toString().indexOf("@wisc.edu") == -1) {
-//            Context context = getApplicationContext();
-//            Toast toast = Toast.makeText(context, "Must enter a wisc.edu email", Toast.LENGTH_SHORT);
-//            toast.show();
-//            return;
-//        }
-//
-//        // Check against DB
-//        Context context = getApplicationContext();
-//        SQLiteDatabase userDB = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
-//        UsersDBHelper usersDBHelper = new UsersDBHelper(userDB);
-//
-//        // If username hasn't been entered properly
-//        if (usersDBHelper.usernameExists(newUsername)) {
-//            Toast.makeText(context, "Username already exists or is invalid", Toast.LENGTH_SHORT);
-//            openCredsDialog();
-//        }
-//        // If passwords don't match
-//        else if (newPassword == null) {
-//            Toast.makeText(context, "Passwords do not match or were left empty", Toast.LENGTH_SHORT).show();
-//            openCredsDialog();
-//        }
-//
-//        else {
-//            User newUser = User.initUser(newUsername, newPassword);
-//            // SET ALL PROFILE THINGS TODO
-//            // Insert into db
-//            usersDBHelper.insertUser(newUser);
-//
-//            // Save username and password to SharedPreferences
-//            sharedPreferences.edit().putString("username", newUsername).apply();
-//            sharedPreferences.edit().putString("password", newPassword).apply();
-//            sharedPreferences.edit().putBoolean("useCurLocation", newUser.getUseCurLocation()).apply();
-//            Intent intent = new Intent(this, MainFeedsActivity.class);
-//            Toast.makeText(context, String.format("New profile created for %s!", newUsername), Toast.LENGTH_LONG).show();
-//            startActivity(intent);
-//        }
-//    }
-//
-//
+    /**
+     * Assign the LocationManager (when permission is granted)
+     */
+    public void startListening() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        }
+    }
+
+    /**
+     * When permission for location services is requested
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startListening();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "The CampUs app requires location permissions.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     /**
      * Interface callback to get user credentials from dialog
      * @param email

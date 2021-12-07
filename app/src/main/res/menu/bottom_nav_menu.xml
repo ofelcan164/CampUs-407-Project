@@ -3,8 +3,7 @@
 
     <item
         android:id="@+id/social_option"
-        android:title="Social"
-        android:enabled="true"/>
+        android:title="Social"/>
 
     <item
         android:id="@+id/market_option"

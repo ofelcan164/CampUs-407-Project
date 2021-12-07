@@ -15,6 +15,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignIn extends AppCompatActivity {
 
@@ -26,6 +31,7 @@ public class SignIn extends AppCompatActivity {
     private EditText passwordEditText;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mRef;
 
     private SharedPreferences sharedPreferences;
 
@@ -39,6 +45,9 @@ public class SignIn extends AppCompatActivity {
 
         // Firebase auth
         mAuth = FirebaseAuth.getInstance();
+
+        // Firebase DataBase for user information
+        mRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         // Check for saved email and password
         if (!(sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals(""))) {
@@ -78,8 +87,6 @@ public class SignIn extends AppCompatActivity {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-
-
         if (email == null || email.equals("")) {
             emailEditText.setError("Please enter an email");
         }
@@ -91,8 +98,24 @@ public class SignIn extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        sharedPreferences.edit().putString("email", email).apply(); // TODO SOMETHING ABOUT DISPLAYNAME
+                        // Update SharedPreferences
+                        sharedPreferences.edit().putString("email", email).apply();
                         sharedPreferences.edit().putString("password", password).apply();
+                        if (mAuth.getCurrentUser() != null) {
+                             mRef.child(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                    User user = task.getResult().getValue(User.class);
+
+                                    // Add location to SharedPreferences
+                                    sharedPreferences.edit().putFloat("user_lat", (float)user.getLat()).apply();
+                                    sharedPreferences.edit().putFloat("user_lng", (float)user.getLng()).apply();
+                                    sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
+                                }
+                            });
+                        }
+
+                        // Start main activity
                         startActivity(new Intent(SignIn.this, MainFeedsActivity.class));
                     } else {
                         emailEditText.setError("Incorrect email or password");
