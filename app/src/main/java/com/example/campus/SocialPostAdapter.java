@@ -47,7 +47,6 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
                 // View another user's profile
                 Context context = view.getContext();
                 Intent intent = new Intent(context, OtherProfileActivity.class);
-                intent.putExtra("uid", post.getUID());
                 intent.putExtra("back", "social");
                 context.startActivity(intent);
             }

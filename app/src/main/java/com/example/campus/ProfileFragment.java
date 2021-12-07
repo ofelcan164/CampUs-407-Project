@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -30,6 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,12 +43,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
 public class ProfileFragment extends Fragment {
 
     private ImageView edit_profile_icon;
+    private ImageView profile_pic;
     private CheckBox curLocationCheck;
     private Button logoutBtn;
 
@@ -53,6 +60,7 @@ public class ProfileFragment extends Fragment {
     private TextView year;
     private TextView major;
     private TextView phone;
+    private String userID;
 
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
@@ -127,6 +135,8 @@ public class ProfileFragment extends Fragment {
                         year.setText(user.getYear());
                         major.setText(user.getMajor());
                         phone.setText(user.getPhone());
+                        userID = user.getUID();
+                        downloadAndSet(v, userID);
                         break;
                     }
                 }
@@ -158,6 +168,30 @@ public class ProfileFragment extends Fragment {
 
         // Return fragment view
         return v;
+    }
+
+    public void downloadAndSet(View v, String userID) {
+        String profilePicRoot = "profilePictures/";
+        String profilePicPath = profilePicRoot.concat(userID);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference profilePicRef = storageReference.child(profilePicPath);
+
+        profile_pic = v.findViewById(R.id.profile_pic);
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        profilePicRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                profile_pic.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image Download failed");
+            }
+        });
     }
 
     private void editProfileIconClicked() {
