@@ -22,6 +22,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +48,7 @@ public class ProfileFragment extends Fragment {
     private TextView year;
     private TextView major;
     private TextView phone;
+    private String userID;
 
 
     private SharedPreferences sharedPreferences;
@@ -118,6 +121,8 @@ public class ProfileFragment extends Fragment {
                         year.setText(user.getYear());
                         major.setText(user.getMajor());
                         phone.setText(user.getPhone());
+                        userID = user.getUID();
+                        downloadAndSet(v, userID);
                         break;
                     }
                 }
@@ -132,15 +137,30 @@ public class ProfileFragment extends Fragment {
         return v;
     }
 
-    public void downloadAndSet(View view) {
+    public void downloadAndSet(View v, String userID) {
         String profilePicRoot = "profilePictures/";
-        String profilePicPath = profilePicRoot.concat(mAuth.getUid());
+        String profilePicPath = profilePicRoot.concat(userID);
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         StorageReference profilePicRef = storageReference.child(profilePicPath);
 
-        profile_pic = (ImageView) view.findViewById(R.id.profile_pic);
+        profile_pic = v.findViewById(R.id.profile_pic);
         final long ONE_MEGABYTE = 1024 * 1024;
+
+        profilePicRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                profile_pic.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image Download failed");
+            }
+        });
     }
+
     private void editProfileIconClicked() {
         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
 //        intent.putExtra("year", ); TODO

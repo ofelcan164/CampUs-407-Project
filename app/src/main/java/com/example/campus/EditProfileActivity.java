@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
@@ -136,6 +138,8 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                         yearEditText.setText(user.getYear());
                         majorEditText.setText(user.getMajor());
                         phoneEditText.setText(user.getPhone());
+                        String userID = user.getUID();
+                        downloadAndSet(userID);
                         break;
                     }
                 }
@@ -193,34 +197,34 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                     year, major,
                     mAuth.getCurrentUser().getUid()));
 
+            try{
+                editProfilePictureImageView.setDrawingCacheEnabled(true);
+                editProfilePictureImageView.buildDrawingCache();
+                Bitmap bitmap = editProfilePictureImageView.getDrawingCache();
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] socialPhotoByteStream = baos.toByteArray();
+
+                String baseFolder = "profilePictures/";
+                String imageFilePath = baseFolder.concat(mAuth.getUid());
+
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference imageRef = storageRef.child(imageFilePath);
+
+                UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image upload failed. Error:" + e);
+            }
             startActivity(new Intent(this, MainFeedsActivity.class).putExtra("select", "profile"));
-        }
-        try{
-            editProfilePictureImageView.setDrawingCacheEnabled(true);
-            editProfilePictureImageView.buildDrawingCache();
-            Bitmap bitmap = editProfilePictureImageView.getDrawingCache();
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] socialPhotoByteStream = baos.toByteArray();
-
-            String baseFolder = "profilePictures/";
-            String imageFilePath = baseFolder.concat(mAuth.getUid());
-
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference imageRef = storageRef.child(imageFilePath);
-
-            UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("Error", "Image upload failed. Error:" + e);
         }
     }
 
@@ -231,6 +235,34 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             Uri selectedImage = data.getData();
             editProfilePictureImageView.setImageURI(selectedImage);
         }
+    }
+
+    /**
+     * Update picture in the edit screen
+     * @param userID
+     */
+    public void downloadAndSet(String userID) {
+        String profilePicRoot = "profilePictures/";
+        String profilePicPath = profilePicRoot.concat(userID);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference profilePicRef = storageReference.child(profilePicPath);
+
+        editProfilePictureImageView = findViewById(R.id.editProfilePictureImageView);
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        profilePicRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                editProfilePictureImageView.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image Download failed");
+            }
+        });
     }
 
     /**

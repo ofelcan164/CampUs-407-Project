@@ -5,30 +5,44 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class CreateProfile extends AppCompatActivity implements CreateUserCredsDialog.CreateUserCredsDialogListener {
 
     private Button cancelBtn;
     private Button createBtn;
     private Button createCredsBtn;
+    private Button addPhotoBtn;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    ImageView addProfilePictureImageView;
 
     private String passwordFromDialog1;
     private String passwordFromDialog2;
@@ -38,11 +52,21 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
 
+    @SuppressLint("WrongThread")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
 
+        addProfilePictureImageView = findViewById(R.id.addProfilePictureImageView);
+        addPhotoBtn = (Button) findViewById(R.id.add_profile_picture);
+        addPhotoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+            }
+        });
         // Set up cancel button
         cancelBtn = (Button) findViewById(R.id.create_cancel);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +104,47 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         });
 
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
+
+
+        try{
+            addProfilePictureImageView.setDrawingCacheEnabled(true);
+            addProfilePictureImageView.buildDrawingCache();
+            Bitmap bitmap = addProfilePictureImageView.getDrawingCache();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] socialPhotoByteStream = baos.toByteArray();
+
+            String baseFolder = "profilePictures/";
+            String imageFilePath = baseFolder.concat(mAuth.getUid());
+
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference imageRef = storageRef.child(imageFilePath);
+
+            UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("Error", "Image upload failed. Error:" + e);
+        }
+    }
+
+    /**
+     * Adds profile picture to image view
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            addProfilePictureImageView.setImageURI(selectedImage);
+        }
     }
 
     /**
@@ -145,9 +210,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
 //                        progressDialog.dismiss();
                     }
                 });
-
-
-
     }
 
     /**
