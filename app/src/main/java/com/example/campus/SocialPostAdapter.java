@@ -2,9 +2,13 @@ package com.example.campus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, SocialPostAdapter.socialPostViewHolder> {
 
@@ -51,6 +59,10 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
                 context.startActivity(intent);
             }
         });
+
+        if (post.getPostID() != null) {
+            downloadAndSet(post.getPostID(), holder);
+        }
     }
 
     /**
@@ -59,6 +71,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
     class socialPostViewHolder extends RecyclerView.ViewHolder {
         TextView username;
         TextView content;
+        ImageView image;
 
         /**
          * Constructor
@@ -68,6 +81,31 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
 
             username = (TextView) itemView.findViewById(R.id.socialPostUsername);
             content = (TextView) itemView.findViewById(R.id.socialPostContent);
+            image = (ImageView) itemView.findViewById(R.id.socialPostImage);
         }
+    }
+
+    public void downloadAndSet(String postID, socialPostViewHolder holder) {
+
+        String imageRoot = "images/";
+        String imagePath = imageRoot.concat(postID);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageReference.child(imagePath);
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                holder.image.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image Download failed");
+            }
+        });
     }
 }
