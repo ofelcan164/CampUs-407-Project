@@ -2,6 +2,7 @@ package com.example.campus;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -98,6 +99,13 @@ public class MainFeedsActivity extends AppCompatActivity {
             }
         } else {
             bottomNavigationView.setSelectedItemId(R.id.social_option);
+        }
+
+        // Receive intent from notification click
+        if (getIntent().getStringExtra("select") != null) {
+            if (getIntent().getStringExtra("select").equals("alert")) {
+                bottomNavigationView.setSelectedItemId(R.id.alert_option);
+            }
         }
     }
 

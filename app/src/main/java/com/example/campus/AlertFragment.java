@@ -1,13 +1,19 @@
 package com.example.campus;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AlertFragment extends Fragment {
 
@@ -39,6 +46,14 @@ public class AlertFragment extends Fragment {
 
     DatabaseReference mRef;
 
+    private static final String CHANNEL_1_ID = "channel1";
+    private NotificationManagerCompat notificationManager;
+    private String postTitle;
+    private String postContent;
+    private String postUrgency;
+    private AlertPost latestPost = null;
+    private AlertPost newPost;
+
     public AlertFragment() {
         // Required empty public constructor
     }
@@ -48,6 +63,9 @@ public class AlertFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_alert, container, false);
+
+        // Set up notifications
+        notificationManager = NotificationManagerCompat.from(getActivity());
 
         imageButton = (ImageButton) v.findViewById(R.id.floatingPlusButton);
         dropDownMenu = new PopupMenu(getContext(), imageButton);
@@ -86,15 +104,41 @@ public class AlertFragment extends Fragment {
             }
         });
 
+        // Initialize posts
+        posts = new ArrayList<>();
+
         // Database reference
         mRef = FirebaseDatabase.getInstance().getReference().child("posts").child("alerts");
 
-        mRef.addValueEventListener(new ValueEventListener() {
+        ValueEventListener alertPostListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     AlertPost ap = ds.getValue(AlertPost.class);
                     posts.add(ap);
+                }
+
+                // Hacky logic so notification is only sent when a new alert is created
+                if (posts.size() != 0) {
+
+                    newPost = posts.get(posts.size() - 1);
+
+                    if (latestPost == null) {
+                        latestPost = newPost;
+                    }
+
+                    else {
+                        if (!newPost.equals(latestPost)) {
+
+                            postTitle = newPost.getTitle();
+                            postContent = newPost.getContent();
+                            postUrgency = newPost.getUrgencyRating();
+
+                            latestPost = newPost;
+                            sendOnChannel1(v);
+                        }
+                    }
                 }
             }
 
@@ -102,10 +146,10 @@ public class AlertFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show(); // TODO
             }
-        });
+        };
 
-        // Initialize posts
-        posts = new ArrayList<>();
+        mRef.addValueEventListener(alertPostListener);
+
 
         // Set up recycler view
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -126,6 +170,27 @@ public class AlertFragment extends Fragment {
 
         //Return fragment view
         return v;
+    }
+
+    private void sendOnChannel1(View view) {
+
+        Intent activityIntent = new Intent(getActivity(), MainFeedsActivity.class);
+        activityIntent.putExtra("select", "alert");
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, activityIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
+                .setContentTitle(postUrgency + " - " + postTitle)
+                .setContentText(postContent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.RED)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        notificationManager.notify(1, notification);
     }
 
     /**
