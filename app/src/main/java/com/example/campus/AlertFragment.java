@@ -1,6 +1,7 @@
 package com.example.campus;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -173,13 +174,20 @@ public class AlertFragment extends Fragment {
 
     private void sendOnChannel1(View view) {
 
+        Intent activityIntent = new Intent(getActivity(), MainFeedsActivity.class);
+        activityIntent.putExtra("select", "alert");
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, activityIntent, 0);
+
         Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
-                .setContentTitle(postTitle)
-                .setContentText(postUrgency + " - " + postTitle)
+                .setContentTitle(postUrgency + " - " + postTitle)
+                .setContentText(postContent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setColor(Color.RED)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .build();
 
         notificationManager.notify(1, notification);
