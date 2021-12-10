@@ -1,8 +1,17 @@
 package com.example.campus;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class CreateNewMarketPost extends AppCompatActivity {
 
     FirebaseAuth mAuth;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +36,15 @@ public class CreateNewMarketPost extends AppCompatActivity {
         // Auth
         mAuth = FirebaseAuth.getInstance();
 
+        // Set up location services
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+            }
+        };
+        startListening();
+
         Button postBtn = (Button) findViewById(R.id.newPostSaleBtn);
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,20 +56,28 @@ public class CreateNewMarketPost extends AppCompatActivity {
                 if (salePostTitle.getText().toString() != null && !salePostTitle.getText().toString().equals("")
                         && salePostPhone.getText().toString() != null && !salePostPhone.getText().toString().equals("")
                         && salePostDescription.getText().toString() != null && !salePostDescription.getText().toString().equals("")) {
-                    MarketPost post = new MarketPost(salePostTitle.getText().toString(),
-                            salePostPhone.getText().toString(),
-                            salePostDescription.getText().toString(),
-                            mAuth.getCurrentUser().getDisplayName(),
-                            mAuth.getUid());
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    // Post the post!
-                    postHelper.postMarket(post);
-                    salePostTitle.setError(null);
-                    salePostPhone.setError(null);
-                    salePostDescription.setError(null);
-                    Intent intent = new Intent(CreateNewMarketPost.this, MainFeedsActivity.class);
-                    intent.putExtra("select", "market");
-                    startActivity(intent);
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                        MarketPost post = new MarketPost(salePostTitle.getText().toString(),
+                                salePostPhone.getText().toString(),
+                                salePostDescription.getText().toString(),
+                                mAuth.getCurrentUser().getDisplayName(),
+                                location.getLatitude(),
+                                location.getLongitude(),
+                                mAuth.getUid());
+
+                        // Post the post!
+                        postHelper.postMarket(post);
+                        salePostTitle.setError(null);
+                        salePostPhone.setError(null);
+                        salePostDescription.setError(null);
+                        Intent intent = new Intent(CreateNewMarketPost.this, MainFeedsActivity.class);
+                        intent.putExtra("select", "market");
+                        startActivity(intent);
+                    }
                 } else {
                     salePostTitle.setError("Please enter you post's title");
                     salePostPhone.setError("Please enter your phone number");
@@ -57,5 +85,14 @@ public class CreateNewMarketPost extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Assign the LocationManager (when permission is granted)
+     */
+    public void startListening() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        }
     }
 }
