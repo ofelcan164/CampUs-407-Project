@@ -349,6 +349,7 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
      * Save current location to database for user
      */
     private void saveCurLocation() {
+        // TODO IF USER_CUR_LOC THEN DONT GET LOCATION AGAIN
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
