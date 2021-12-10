@@ -7,16 +7,20 @@ public class SocialPost {
     private String username;
     private String postID;
     private String UID;
+    private double lat;
+    private double lng;
 
     /**
      * Default no arg constructor for Firebase deserialization
      */
     public SocialPost() {}
 
-    public SocialPost(String content, String username, String postID, String UID) {
+    public SocialPost(String content, String username, String postID, double lat, double lng, String UID) {
         this.content = content;
         this.username = username;
         this.postID = postID;
+        this.lat = lat;
+        this.lng = lng;
         this.UID = UID;
     }
 
@@ -29,6 +33,14 @@ public class SocialPost {
     }
     public String getPostID() {
         return this.postID;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
     }
 
     public String getUID() {
@@ -47,6 +59,15 @@ public class SocialPost {
     public void setPostID(String postID) {
         this.postID = postID;
     }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
     public void setUID(String UID) {
         this.UID = UID;
     }
