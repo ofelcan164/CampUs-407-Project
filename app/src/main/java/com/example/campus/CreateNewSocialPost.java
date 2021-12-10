@@ -29,10 +29,11 @@ import java.io.ByteArrayOutputStream;
 
 public class CreateNewSocialPost extends AppCompatActivity {
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private static final int RESULT_LOAD_IMAGE = 1;
-    ImageView imageViewSocial;
-    String postID;
+    private ImageView imageViewSocial;
+    private String postID;
+    private boolean photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
             public void onClick(View v) {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                photo = true; // TODO THIS SHOULDNT EVEN BE SET LIKE THIS CANT ASSUME USER ACTULLY PICKED A PHOTO
             }
         });
 
@@ -66,12 +68,14 @@ public class CreateNewSocialPost extends AppCompatActivity {
                 // Get post info
                 EditText socialPostContent = (EditText) findViewById(R.id.newSocialPostContent);
                 if (socialPostContent.getText().toString() != null && !socialPostContent.getText().toString().equals("")) {
-                    SocialPost post = new SocialPost(socialPostContent.getText().toString(), mAuth.getCurrentUser().getDisplayName(), postID);
+                    SocialPost post = new SocialPost(socialPostContent.getText().toString(), mAuth.getCurrentUser().getDisplayName(), postID, mAuth.getUid());
 
                     // Post the post!
                     postID = postHelper.postSocial(post);
                     socialPostContent.setError(null);
-                    upload(imageViewSocial, postID);
+                    if (photo) {
+                        upload(imageViewSocial, postID);
+                    }
                     Intent intent = new Intent(CreateNewSocialPost.this, MainFeedsActivity.class);
                     intent.putExtra("select", "social");
                     startActivity(intent);
@@ -102,8 +106,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 40, baos);
             byte[] socialPhotoByteStream = baos.toByteArray();
 
-            String baseFolder = "images/";
-            String imageFilePath = baseFolder.concat(postID);
+            String imageFilePath = "images/" + postID;
 
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
             StorageReference imageRef = storageRef.child(imageFilePath);
@@ -117,7 +120,6 @@ public class CreateNewSocialPost extends AppCompatActivity {
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
             Log.i("Error", "Image upload failed. Error:" + e);
         }
     }
