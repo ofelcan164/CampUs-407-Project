@@ -40,6 +40,8 @@ public class OtherProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_profile);
 
+        Log.i("OTHER ACT", getIntent().getStringExtra("uid"));
+
         // Set up textview information
         username = (TextView) findViewById(R.id.username_other_profile);
         email = (TextView) findViewById(R.id.email_other_profile);
