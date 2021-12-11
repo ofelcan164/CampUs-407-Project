@@ -214,6 +214,7 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                                     sharedPreferences.edit().putFloat("user_lat", (float)location.getLatitude()).apply();
                                     sharedPreferences.edit().putFloat("user_lng", (float)location.getLongitude()).apply();
                                     sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
+                                    sharedPreferences.edit().putInt("urgency_thres", 1).apply();
 
                                     // Save username as DisplayName
                                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
