@@ -1,21 +1,28 @@
 package com.example.campus;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class OtherProfileActivity extends AppCompatActivity {
 
@@ -24,6 +31,8 @@ public class OtherProfileActivity extends AppCompatActivity {
     private TextView year;
     private TextView major;
     private TextView phone;
+    private ImageView other_profile_pic;
+    private String userID;
 
     private Button back;
 
@@ -65,6 +74,8 @@ public class OtherProfileActivity extends AppCompatActivity {
                         year.setText(user.getYear());
                         major.setText(user.getMajor());
                         phone.setText(user.getPhone());
+                        userID = user.getUID();
+                        downloadAndSet(userID);
                         break;
                     }
                 }
@@ -82,6 +93,30 @@ public class OtherProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(OtherProfileActivity.this, MainFeedsActivity.class);
                 intent.putExtra("select", getIntent().getStringExtra("back"));
                 startActivity(intent);
+            }
+        });
+    }
+
+    public void downloadAndSet(String userID) {
+        String profilePicRoot = "profilePictures/";
+        String profilePicPath = profilePicRoot.concat(userID);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference profilePicRef = storageReference.child(profilePicPath);
+
+        other_profile_pic = findViewById(R.id.profile_pic);
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        profilePicRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                other_profile_pic.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image Download failed");
             }
         });
     }
