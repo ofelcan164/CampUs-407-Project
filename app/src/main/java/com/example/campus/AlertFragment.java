@@ -105,11 +105,6 @@ public class AlertFragment extends Fragment {
                         Intent newAlertPostIntent = new Intent(getActivity(), CreateNewAlertPost.class);
                         startActivity(newAlertPostIntent);
                         return true;
-
-                    case R.id.editUrgencyThreshold:
-                        openEditUserUrgencyThresholdDialog();
-                        return true;
-
                 }
 
                 return false;
@@ -139,40 +134,40 @@ public class AlertFragment extends Fragment {
                 }
 
                 // Hacky logic so notification is only sent when a new alert is created
-                if (posts.size() != 0) {
-
-                    newPost = posts.get(posts.size() - 1);
-
-                    if (latestPost == null) {
-                        latestPost = newPost;
-                    }
-
-                    else {
-
-                        if (!newPost.equals(latestPost))  {
-
-                            postTitle = newPost.getTitle();
-                            postContent = newPost.getContent();
-                            postUrgency = newPost.getUrgencyRating();
-                            postUsername = newPost.getUsername();
-
-                            latestPost = newPost;
-
-                            switch(postUrgency) {
-                                case "!":
-                                    sendOnChannel1(v);
-                                case "!!":
-                                    sendOnChannel2(v);
-                                case "!!!":
-                                    sendOnChannel3(v);
-                                case "!!!!":
-                                    sendOnChannel4(v);
-                                case "!!!!!":
-                                    sendOnChannel5(v);
-                            }
-                        }
-                    }
-                }
+//                if (posts.size() != 0) {
+//
+//                    newPost = posts.get(posts.size() - 1);
+//
+//                    if (latestPost == null) {
+//                        latestPost = newPost;
+//                    }
+//
+//                    else {
+//
+//                        if (!newPost.equals(latestPost))  {
+//
+//                            postTitle = newPost.getTitle();
+//                            postContent = newPost.getContent();
+//                            postUrgency = newPost.getUrgencyRating();
+//                            postUsername = newPost.getUsername();
+//
+//                            latestPost = newPost;
+//
+//                            switch(postUrgency) {
+//                                case "!":
+//                                    sendOnChannel1(v);
+//                                case "!!":
+//                                    sendOnChannel2(v);
+//                                case "!!!":
+//                                    sendOnChannel3(v);
+//                                case "!!!!":
+//                                    sendOnChannel4(v);
+//                                case "!!!!!":
+//                                    sendOnChannel5(v);
+//                            }
+//                        }
+//                    }
+//                }
             }
 
             @Override
@@ -326,15 +321,5 @@ public class AlertFragment extends Fragment {
     @Override public void onStop() {
         super.onStop();
         adapter.stopListening();
-    }
-
-    /**
-     * Open the edit user urgency threshold dialog
-     */
-    public void openEditUserUrgencyThresholdDialog() {
-
-        new UrgencyDialogFragment().show(
-                getChildFragmentManager(), "UrgencyDialogFragment");
-
     }
 }
