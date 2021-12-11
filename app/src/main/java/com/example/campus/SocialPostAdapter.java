@@ -56,6 +56,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
                 Context context = view.getContext();
                 Intent intent = new Intent(context, OtherProfileActivity.class);
                 intent.putExtra("back", "social");
+                intent.putExtra("uid", post.getUID());
                 context.startActivity(intent);
             }
         });
@@ -87,8 +88,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
 
     public void downloadAndSet(String postID, socialPostViewHolder holder) {
 
-        String imageRoot = "images/";
-        String imagePath = imageRoot.concat(postID);
+        String imagePath = "images/" + postID;
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageReference.child(imagePath);
 
@@ -103,8 +103,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
-                Log.i("Error", "Image Download failed");
+                Log.i("Error", "Image Download failed -- " + imagePath);
             }
         });
     }

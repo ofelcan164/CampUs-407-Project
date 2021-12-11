@@ -1,10 +1,21 @@
 package com.example.campus;
 
+import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +50,22 @@ public class AlertFragment extends Fragment {
 
     DatabaseReference mRef;
 
+    private SharedPreferences sharedPreferences;
+
+    private static final String CHANNEL_1_ID = "channel1";
+    private static final String CHANNEL_2_ID = "channel2";
+    private static final String CHANNEL_3_ID = "channel3";
+    private static final String CHANNEL_4_ID = "channel4";
+    private static final String CHANNEL_5_ID = "channel5";
+
+    private NotificationManagerCompat notificationManager;
+    private String postTitle;
+    private String postContent;
+    private String postUrgency;
+    private String postUsername;
+    private AlertPost latestPost = null;
+    private AlertPost newPost;
+
     public AlertFragment() {
         // Required empty public constructor
     }
@@ -48,6 +75,11 @@ public class AlertFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_alert, container, false);
+
+        // Set up notifications
+        notificationManager = NotificationManagerCompat.from(getActivity());
+
+        sharedPreferences = getContext().getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
         imageButton = (ImageButton) v.findViewById(R.id.floatingPlusButton);
         dropDownMenu = new PopupMenu(getContext(), imageButton);
@@ -73,6 +105,11 @@ public class AlertFragment extends Fragment {
                         Intent newAlertPostIntent = new Intent(getActivity(), CreateNewAlertPost.class);
                         startActivity(newAlertPostIntent);
                         return true;
+
+                    case R.id.editUrgencyThreshold:
+                        openEditUserUrgencyThresholdDialog();
+                        return true;
+
                 }
 
                 return false;
@@ -86,15 +123,55 @@ public class AlertFragment extends Fragment {
             }
         });
 
+        // Initialize posts
+        posts = new ArrayList<>();
+
         // Database reference
         mRef = FirebaseDatabase.getInstance().getReference().child("posts").child("alerts");
 
-        mRef.addValueEventListener(new ValueEventListener() {
+        ValueEventListener alertPostListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     AlertPost ap = ds.getValue(AlertPost.class);
                     posts.add(ap);
+                }
+
+                // Hacky logic so notification is only sent when a new alert is created
+                if (posts.size() != 0) {
+
+                    newPost = posts.get(posts.size() - 1);
+
+                    if (latestPost == null) {
+                        latestPost = newPost;
+                    }
+
+                    else {
+
+                        if (!newPost.equals(latestPost))  {
+
+                            postTitle = newPost.getTitle();
+                            postContent = newPost.getContent();
+                            postUrgency = newPost.getUrgencyRating();
+                            postUsername = newPost.getUsername();
+
+                            latestPost = newPost;
+
+                            switch(postUrgency) {
+                                case "!":
+                                    sendOnChannel1(v);
+                                case "!!":
+                                    sendOnChannel2(v);
+                                case "!!!":
+                                    sendOnChannel3(v);
+                                case "!!!!":
+                                    sendOnChannel4(v);
+                                case "!!!!!":
+                                    sendOnChannel5(v);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -102,10 +179,10 @@ public class AlertFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show(); // TODO
             }
-        });
+        };
 
-        // Initialize posts
-        posts = new ArrayList<>();
+        mRef.addValueEventListener(alertPostListener);
+
 
         // Set up recycler view
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -128,6 +205,111 @@ public class AlertFragment extends Fragment {
         return v;
     }
 
+    private void sendOnChannel1(View view) {
+
+        Intent activityIntent = new Intent(getActivity(), MainFeedsActivity.class);
+        activityIntent.putExtra("select", "alert");
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, activityIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
+                .setContentTitle(postUrgency + " - " + postTitle)
+                .setContentText(postUsername + ": " + postContent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.RED)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
+
+    private void sendOnChannel2(View view) {
+
+        Intent activityIntent = new Intent(getActivity(), MainFeedsActivity.class);
+        activityIntent.putExtra("select", "alert");
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, activityIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
+                .setContentTitle(postUrgency + " - " + postTitle)
+                .setContentText(postUsername + ": " + postContent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.RED)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        notificationManager.notify(2, notification);
+    }
+
+    private void sendOnChannel3(View view) {
+
+        Intent activityIntent = new Intent(getActivity(), MainFeedsActivity.class);
+        activityIntent.putExtra("select", "alert");
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, activityIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_3_ID)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
+                .setContentTitle(postUrgency + " - " + postTitle)
+                .setContentText(postUsername + ": " + postContent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.RED)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        notificationManager.notify(3, notification);
+    }
+
+    private void sendOnChannel4(View view) {
+
+        Intent activityIntent = new Intent(getActivity(), MainFeedsActivity.class);
+        activityIntent.putExtra("select", "alert");
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, activityIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_4_ID)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
+                .setContentTitle(postUrgency + " - " + postTitle)
+                .setContentText(postUsername + ": " + postContent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.RED)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        notificationManager.notify(4, notification);
+    }
+
+    private void sendOnChannel5(View view) {
+
+        Intent activityIntent = new Intent(getActivity(), MainFeedsActivity.class);
+        activityIntent.putExtra("select", "alert");
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, activityIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_5_ID)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
+                .setContentTitle(postUrgency + " - " + postTitle)
+                .setContentText(postUsername + ": " + postContent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.RED)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        notificationManager.notify(5, notification);
+    }
+
     /**
      * Tells the app to start getting
      * data from database on starting of the activity
@@ -144,5 +326,15 @@ public class AlertFragment extends Fragment {
     @Override public void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    /**
+     * Open the edit user urgency threshold dialog
+     */
+    public void openEditUserUrgencyThresholdDialog() {
+
+        new UrgencyDialogFragment().show(
+                getChildFragmentManager(), "UrgencyDialogFragment");
+
     }
 }

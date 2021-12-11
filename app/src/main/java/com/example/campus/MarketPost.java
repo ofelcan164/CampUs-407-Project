@@ -6,6 +6,8 @@ public class MarketPost {
     private String phoneNum;
     private String description;
     private String username;
+    private double lat;
+    private double lng;
     private String UID;
 
     /**
@@ -16,11 +18,13 @@ public class MarketPost {
     /**
      * Constructor
      */
-    public MarketPost(String title, String phoneNum, String description, String username, String UID) {
+    public MarketPost(String title, String phoneNum, String description, String username, double lat, double lng, String UID) {
         this.title = title;
         this.phoneNum = phoneNum;
         this.description = description;
         this.username = username;
+        this.lat = lat;
+        this.lng = lng;
         this.UID = UID;
     }
 
@@ -41,9 +45,17 @@ public class MarketPost {
         return username;
     }
 
-    public String getUID() { return this.UID; }
+    public double getLat() {
+        return lat;
+    }
 
+    public double getLng() {
+        return lng;
+    }
 
+    public String getUID() {
+        return this.UID;
+    }
 
     // Setters
     public void setTitle(String title) {
@@ -60,6 +72,14 @@ public class MarketPost {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 
     public void setUID(String UID) {

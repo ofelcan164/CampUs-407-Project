@@ -13,4 +13,8 @@
         android:id="@+id/newAlert"
         android:title="New Alert" />
 
+    <item
+        android:id="@+id/editUrgencyThreshold"
+        android:title="Edit Urgency Threshold" />
+
 </menu>

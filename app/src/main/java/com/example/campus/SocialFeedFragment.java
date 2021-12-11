@@ -1,13 +1,10 @@
 package com.example.campus;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +14,12 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.common.internal.Objects;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +40,8 @@ public class SocialFeedFragment extends Fragment {
     ArrayList<SocialPost> posts;
 
     DatabaseReference mRef;
+
+    private SharedPreferences sharedPreferences;
 
     public SocialFeedFragment() {
         // Required empty public constructor
@@ -89,15 +92,28 @@ public class SocialFeedFragment extends Fragment {
         // Database reference
         mRef = FirebaseDatabase.getInstance().getReference().child("posts").child("social");
 
+        sharedPreferences = getActivity().getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
+
         // Initialize posts
         posts = new ArrayList<>();
+
+        Location userLoc = new Location("");
+        userLoc.setLatitude(sharedPreferences.getFloat("user_lat", 0));
+        userLoc.setLongitude(sharedPreferences.getFloat("user_lng", 0));
 
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     SocialPost sp = ds.getValue(SocialPost.class);
-                    posts.add(sp);
+
+                    Location loc = new Location("");
+                    loc.setLatitude(sp.getLat());
+                    loc.setLongitude(sp.getLng());
+
+                    if (loc.distanceTo(userLoc) <= 100) { // TODO WHat threshold/radius
+                        posts.add(sp);
+                    }
                 }
             }
 

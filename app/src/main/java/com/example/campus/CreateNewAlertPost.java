@@ -1,6 +1,7 @@
 package com.example.campus;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class CreateNewAlertPost extends AppCompatActivity {
                     Intent intent = new Intent(CreateNewAlertPost.this, MainFeedsActivity.class);
                     intent.putExtra("select", "alert");
                     startActivity(intent);
+
                 } else {
                     alertPostTitle.setError("Please enter you post's title");
                     alertPostContent.setError("Please enter you post's content");
