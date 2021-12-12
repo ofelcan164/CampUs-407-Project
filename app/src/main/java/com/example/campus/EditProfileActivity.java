@@ -238,7 +238,7 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                     sharedPreferences.getFloat("user_lng", 0),
                     mAuth.getCurrentUser().getUid()));
 
-            try{
+            try {
                 editProfilePictureImageView.setDrawingCacheEnabled(true);
                 editProfilePictureImageView.buildDrawingCache();
                 Bitmap bitmap = editProfilePictureImageView.getDrawingCache();

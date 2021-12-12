@@ -103,7 +103,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i("Error", "Image Download failed -- " + imagePath);
+                Log.i("SocialPostAdapter", "Image Download failed -- " + imagePath);
             }
         });
     }

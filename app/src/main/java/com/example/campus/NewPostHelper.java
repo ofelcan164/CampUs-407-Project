@@ -30,13 +30,9 @@ public class NewPostHelper {
     /**
      * Save a new social post to Database
      */
-    public String postSocial(SocialPost post) {
+    public void postSocial(SocialPost post) {
         // Add post to users posts
-        DatabaseReference newRef = mRef.child("posts").child("social").push();
-        String key = newRef.getKey();
-        post.setPostID(key);
-        newRef.setValue(post);
-        return key;
+        mRef.child("posts").child("social").push().setValue(post); // push() creates guaranteed unique ID for post
     }
 
     /**
