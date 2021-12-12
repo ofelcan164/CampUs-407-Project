@@ -48,7 +48,7 @@ public class CreateUserCredsDialog extends AppCompatDialogFragment {
                         } else if (!passwordEnter.getText().toString().equals(passwordConfirm.getText().toString())) {
                             passwordConfirm.setError("Passwords must match");
                             listener.saveCreds(emailEditText.getText().toString(), null, null);
-                        } else if (passwordEnter.getText().toString().length() < 6) {
+                        } else if (passwordEnter.getText().toString().length() < 6 || passwordConfirm.getText().toString().length() < 6) {
                             listener.saveCreds(emailEditText.getText().toString(), null, null);
                         } else {
                             // Valid user credentials

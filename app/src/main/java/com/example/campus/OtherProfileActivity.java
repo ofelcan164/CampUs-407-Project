@@ -103,14 +103,18 @@ public class OtherProfileActivity extends AppCompatActivity {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         StorageReference profilePicRef = storageReference.child(profilePicPath);
 
-        other_profile_pic = findViewById(R.id.profile_pic);
+        other_profile_pic = findViewById(R.id.other_profile_pic);
         final long ONE_MEGABYTE = 1024 * 1024;
 
         profilePicRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                other_profile_pic.setImageBitmap(bitmap);
+                if (bitmap != null) {
+                    other_profile_pic.setImageBitmap(bitmap);
+                } else {
+                    Log.i("Profile Photo", "No profile photo present");
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

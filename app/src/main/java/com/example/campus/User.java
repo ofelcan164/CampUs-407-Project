@@ -24,7 +24,6 @@ public class User {
     private String UID;
     private double lat;
     private double lng;
-//    private boolean useCurLocation;
 
     /**
      * No arg constructor

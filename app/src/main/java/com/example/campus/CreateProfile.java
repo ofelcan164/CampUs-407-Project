@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -120,7 +121,7 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
             byte[] socialPhotoByteStream = baos.toByteArray();
 
             String baseFolder = "profilePictures/";
-            String imageFilePath = baseFolder.concat(mAuth.getUid());
+            String imageFilePath = baseFolder + mAuth.getUid();
 
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
             StorageReference imageRef = storageRef.child(imageFilePath);
@@ -188,7 +189,7 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                     openCredsDialog();
                     return;
                 } else if (passwordFromDialog1 == null || passwordFromDialog2 == null) {
-                    Toast.makeText(getApplicationContext(), "Must enter and confirm a valid password [6 characters or more]", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Must enter and confirm a valid password [6 characters or more]", Toast.LENGTH_LONG).show();
                     openCredsDialog();
                     return;
                 }
@@ -207,8 +208,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
-
                                     sharedPreferences.edit().putString("email", emailFromDialog).apply();
                                     sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
                                     sharedPreferences.edit().putFloat("user_lat", (float)location.getLatitude()).apply();
@@ -222,7 +221,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                                             .build();
                                     FirebaseUser curUser = mAuth.getCurrentUser();
                                     curUser.updateProfile(profileUpdates);
-
                                     // Save all user info
                                     userHelper.saveUser(new User(username,
                                             passwordFromDialog1,
@@ -234,6 +232,10 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                                             location.getLongitude(),
                                             curUser.getUid()));
 
+                                    // Get user signed in properly and then start the main feed
+                                    mAuth.signOut();
+                                    mAuth.signInWithEmailAndPassword(emailFromDialog, passwordFromDialog1);
+                                    Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
                                 } else {
                                     Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
