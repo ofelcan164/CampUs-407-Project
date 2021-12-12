@@ -175,7 +175,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                profile_pic.setImageBitmap(bitmap);
+                if (bitmap.getHeight() != 600 && bitmap.getWidth() >= 600) {
+                    int y = ((bitmap.getHeight()) / 2) - 200;
+                    int x = ((bitmap.getWidth()) / 2) - 200;
+                    bitmap = Bitmap.createBitmap(bitmap, x, y, 400, 400);
+                    profile_pic.setImageBitmap(bitmap);
+                } else {
+                    profile_pic.setImageBitmap(bitmap);
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

@@ -49,6 +49,7 @@
         <entry key="app/src/main/res/layout/fragment_market2.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.271875" />
         <entry key="app/src/main/res/layout/fragment_social_feed.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/social_post_layout.xml" value="0.1" />
       </map>
     </option>
   </component>
