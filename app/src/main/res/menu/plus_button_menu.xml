@@ -12,5 +12,4 @@
     <item
         android:id="@+id/newAlert"
         android:title="New Alert" />
-
 </menu>

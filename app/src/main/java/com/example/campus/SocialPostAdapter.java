@@ -31,7 +31,7 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
     }
 
     /**
-     * Inflate the view and return it to the caller via the apdater
+     * Inflate the view and return it to the caller via the adapter
      */
     @NonNull
     @Override

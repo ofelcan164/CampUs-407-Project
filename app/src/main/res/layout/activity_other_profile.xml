@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_pic"
+        app:layout_constraintTop_toBottomOf="@+id/other_profile_pic"
         app:layout_constraintVertical_bias="0.15" />
 
     <TextView
@@ -118,19 +118,20 @@
         app:layout_constraintTop_toBottomOf="@+id/email_text_other_profile"
         app:layout_constraintVertical_bias="0.05" />
 
+
     <ImageView
-        android:id="@+id/profile_pic"
+        android:id="@+id/other_profile_pic"
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:background="@color/red_1"
-        android:foreground="@drawable/standin_profile_pic"
-        android:foregroundTint="@color/white"
         android:src="@drawable/standin_profile_pic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintVertical_bias="0.05" />
 
     <TextView
         android:id="@+id/username_other_profile"
@@ -138,10 +139,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/email_edit_profile"
+        app:layout_constraintBottom_toTopOf="@+id/email_other_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_pic"
+        app:layout_constraintTop_toBottomOf="@+id/other_profile_pic"
         app:layout_constraintVertical_bias="0.050000012" />
 
     <Button
