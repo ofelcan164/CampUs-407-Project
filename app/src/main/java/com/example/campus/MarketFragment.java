@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -99,6 +100,15 @@ public class MarketFragment extends Fragment {
         // Initialize posts
         posts = new ArrayList<>();
 
+        // Set up recycler view
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView = (RecyclerView) v.findViewById(R.id.marketFeedRecycler);
+
+        linearLayoutManager.setReverseLayout(true); // Newest posts first
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         Location userLoc = new Location("");
         userLoc.setLatitude(sharedPreferences.getFloat("user_lat", 0));
         userLoc.setLongitude(sharedPreferences.getFloat("user_lng", 0));
@@ -112,10 +122,14 @@ public class MarketFragment extends Fragment {
                     Location loc = new Location("");
                     loc.setLatitude(mp.getLat());
                     loc.setLongitude(mp.getLng());
-                    if (loc.distanceTo(userLoc) <= 100) { // TODO WHat threshold/radius
+                    if (loc.distanceTo(userLoc) <= 100000) { // TODO WHat threshold/radius
                         posts.add(mp);
                     }
                 }
+
+                Log.i("SIZE", "Size " + posts.size());
+                adapter = new MarketPostAdapter(posts);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -123,23 +137,6 @@ public class MarketFragment extends Fragment {
                 Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show(); // TODO
             }
         });
-
-        // Set up recycler view
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView = (RecyclerView) v.findViewById(R.id.marketFeedRecycler);
-
-        linearLayoutManager.setReverseLayout(true); // Newest posts first
-        linearLayoutManager.setStackFromEnd(true);
-
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        // Query of the database with FirebaseRecyclerOptions
-        FirebaseRecyclerOptions<MarketPost> options = new FirebaseRecyclerOptions.Builder<MarketPost>()
-                .setQuery(mRef, MarketPost.class).build();
-
-        // Connect the adapter
-        adapter = new MarketPostAdapter(options);
-        recyclerView.setAdapter(adapter);
 
         //Return fragment view
         return v;
@@ -151,7 +148,6 @@ public class MarketFragment extends Fragment {
      */
     @Override public void onStart() {
         super.onStart();
-        adapter.startListening();
     }
 
     /**
@@ -160,6 +156,5 @@ public class MarketFragment extends Fragment {
      */
     @Override public void onStop() {
         super.onStop();
-        adapter.stopListening();
     }
 }

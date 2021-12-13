@@ -21,13 +21,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, MarketPostAdapter.marketPostViewHolder> {
+import java.util.ArrayList;
+
+public class MarketPostAdapter extends RecyclerView.Adapter<MarketPostAdapter.marketPostViewHolder> {
+
+    private ArrayList<MarketPost> posts;
 
     /**
      * Constructor
      */
-    public MarketPostAdapter(@NonNull FirebaseRecyclerOptions<MarketPost> options) {
-        super(options);
+    public MarketPostAdapter(ArrayList<MarketPost> posts) {
+        this.posts = posts;
     }
 
     /**
@@ -40,12 +44,18 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
         return new MarketPostAdapter.marketPostViewHolder(view);
     }
 
+    @Override
+    public int getItemCount() {
+        return posts.size();
+    }
+
     /**
      * Binds XML (market_post_layout) to the required data from MarketPost class
      */
     @Override
-    public void onBindViewHolder(@NonNull MarketPostAdapter.marketPostViewHolder holder, int position, MarketPost post) {
+    public void onBindViewHolder(@NonNull MarketPostAdapter.marketPostViewHolder holder, int position) {
         // Add posts content to view in XML
+        MarketPost post = posts.get(position);
         holder.title.setText(post.getTitle());
         holder.username.setText(post.getUsername());
         holder.description.setText(post.getDescription());
