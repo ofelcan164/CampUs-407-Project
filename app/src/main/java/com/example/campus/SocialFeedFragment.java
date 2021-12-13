@@ -136,15 +136,6 @@ public class SocialFeedFragment extends Fragment {
                 Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show(); // TODO
             }
         });
-
-        // Query of the database with FirebaseRecyclerOptions
-        FirebaseRecyclerOptions<SocialPost> options = new FirebaseRecyclerOptions.Builder<SocialPost>()
-                .setQuery(mRef, SocialPost.class).build();
-
-        // Connect the adapter
-        //adapter = new SocialPostAdapter(posts);
-//        recyclerView.setAdapter(adapter);
-
         //Return fragment view
         return v;
     }
@@ -155,7 +146,6 @@ public class SocialFeedFragment extends Fragment {
      */
     @Override public void onStart() {
         super.onStart();
-//        adapter.startListening();
     }
 
     /**
@@ -164,6 +154,5 @@ public class SocialFeedFragment extends Fragment {
      */
     @Override public void onStop() {
         super.onStop();
-//        adapter.stopListening();
     }
 }
