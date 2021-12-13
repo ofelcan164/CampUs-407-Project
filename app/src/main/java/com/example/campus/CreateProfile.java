@@ -117,37 +117,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
 
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
-        try {
-            addProfilePictureImageView.setDrawingCacheEnabled(true);
-            addProfilePictureImageView.buildDrawingCache();
-            Bitmap bitmap = addProfilePictureImageView.getDrawingCache();
-
-            if (bitmap != null) {
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] socialPhotoByteStream = baos.toByteArray();
-
-                String baseFolder = "profilePictures/";
-                String imageFilePath = baseFolder + mAuth.getUid();
-
-                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                StorageReference imageRef = storageRef.child(imageFilePath);
-
-                UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
-                    }
-                });
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("Error", "Image upload failed. Error:" + e);
-        }
-
         // Set up location services
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -219,8 +188,8 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                             if (task.isSuccessful()) {
                                 sharedPreferences.edit().putString("email", emailFromDialog).apply();
                                 sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
-                                sharedPreferences.edit().putFloat("user_lat", (float)location.getLatitude()).apply();
-                                sharedPreferences.edit().putFloat("user_lng", (float)location.getLongitude()).apply();
+                                sharedPreferences.edit().putFloat("user_lat", (float) location.getLatitude()).apply();
+                                sharedPreferences.edit().putFloat("user_lng", (float) location.getLongitude()).apply();
                                 sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
                                 sharedPreferences.edit().putInt("urgency_thres", 1).apply();
 
@@ -241,10 +210,43 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                                         location.getLongitude(),
                                         curUser.getUid()));
 
-                                // Get user signed in properly and then start the main feed
-                                mAuth.signOut();
-                                mAuth.signInWithEmailAndPassword(emailFromDialog, passwordFromDialog1);
                                 Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
+
+                                // Upload profile photo
+                                // Upload photo to Firebase
+                                try {
+                                    if (addProfilePictureImageView.getDrawable() != null) {
+                                        addProfilePictureImageView.setDrawingCacheEnabled(true);
+                                        addProfilePictureImageView.buildDrawingCache();
+                                        Bitmap bitmap = addProfilePictureImageView.getDrawingCache();
+
+                                        if (bitmap != null) {
+
+                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                            byte[] socialPhotoByteStream = baos.toByteArray();
+
+                                            String baseFolder = "profilePictures/";
+                                            String imageFilePath = baseFolder + mAuth.getUid();
+                                            Log.i("CreateProgile", mAuth.getUid());
+
+                                            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                            StorageReference imageRef = storageRef.child(imageFilePath);
+
+                                            UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
+                                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Log.i("Error", "Image upload failed. Error:" + e);
+                                }
                                 startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
                             } else {
                                 Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();

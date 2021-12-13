@@ -234,8 +234,8 @@ public class ProfileFragment extends Fragment {
             }
         }
 
-        Toast.makeText(getActivity().getApplicationContext(), "Updated location configuration to "
-                + ((curLocationCheck.isChecked()) ? "use current location." : "use saved location."), Toast.LENGTH_SHORT);
+        Toast.makeText(getActivity(), "Updated location configuration to "
+                + ((curLocationCheck.isChecked()) ? "use current location." : "use saved location."), Toast.LENGTH_SHORT).show();
     }
 
     /**
