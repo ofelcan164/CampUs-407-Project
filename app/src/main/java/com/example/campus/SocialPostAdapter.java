@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, SocialPostAdapter.socialPostViewHolder> {
 
@@ -48,7 +49,6 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         // Add posts content to view in XML
         holder.username.setText(post.getUsername());
         holder.content.setText(post.getContent());
-
         holder.username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,8 +97,14 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                holder.image.setImageBitmap(bitmap);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);if (bitmap.getHeight() != 600 && bitmap.getWidth() >= 600) {
+                    int y = ((bitmap.getHeight()) / 2) - 200;
+                    int x = ((bitmap.getWidth()) / 2) - 200;
+                    bitmap = Bitmap.createBitmap(bitmap, x, y, 400, 400);
+                    holder.image.setImageBitmap(bitmap);
+                } else {
+                    holder.image.setImageBitmap(bitmap);
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

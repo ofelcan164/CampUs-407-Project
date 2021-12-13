@@ -140,7 +140,7 @@ public class ProfileFragment extends Fragment {
         });
 
         // Set profile photo (if there is one)
-        downloadAndSet(mAuth.getUid());
+        downloadAndSet(v, mAuth.getUid());
 
         // Location services
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -165,44 +165,37 @@ public class ProfileFragment extends Fragment {
         return v;
     }
 
-    public void downloadAndSet(String userID) {
-        StorageReference profilePicsRef = FirebaseStorage.getInstance().getReference().child("profilePictures/");
-        profilePicsRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+    public void downloadAndSet(View v, String userID) {
+        String profilePicRoot = "profilePictures/";
+        String profilePicPath = profilePicRoot.concat(userID);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference profilePicRef = storageReference.child(profilePicPath);
+
+        profile_pic = v.findViewById(R.id.profile_pic);
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        profilePicRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
-            public void onSuccess(ListResult listResult) {
-                for (StorageReference item : listResult.getItems()) {
-                    if (item.getName().equals(userID)) {
-                        StorageReference profilePicRef = profilePicsRef.child(userID);
-
-                        profile_pic = getActivity().findViewById(R.id.profile_pic);
-                        final long ONE_MEGABYTE = 1024 * 1024;
-
-                        profilePicRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                profile_pic.setImageBitmap(bitmap);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                e.printStackTrace();
-                                Log.i("ProfileFragment", "Image Download failed");
-                            }
-                        });
-
-                        return;
-                    }
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                if (bitmap.getHeight() != 600 && bitmap.getWidth() >= 600) {
+                    int y = ((bitmap.getHeight()) / 2) - 200;
+                    int x = ((bitmap.getWidth()) / 2) - 200;
+                    bitmap = Bitmap.createBitmap(bitmap, x, y, 400, 400);
+                    profile_pic.setImageBitmap(bitmap);
+                } else {
+                    profile_pic.setImageBitmap(bitmap);
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Uh-oh, an error occurred!
-                }
-            });
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image Download failed");
+            }
+        });
     }
-
+  
     private void editProfileIconClicked() {
         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
         startActivity(intent);
