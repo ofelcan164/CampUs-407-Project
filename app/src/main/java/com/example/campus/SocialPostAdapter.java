@@ -21,13 +21,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, SocialPostAdapter.socialPostViewHolder> {
+import java.util.ArrayList;
+
+public class SocialPostAdapter extends RecyclerView.Adapter<SocialPostAdapter.socialPostViewHolder> {
+
+    private ArrayList<SocialPost> posts;
 
     /**
      * Constructor
      */
-    public SocialPostAdapter(@NonNull FirebaseRecyclerOptions<SocialPost> options) {
-        super(options);
+    public SocialPostAdapter(ArrayList<SocialPost> posts) {
+        this.posts = posts;
     }
 
     /**
@@ -40,12 +44,19 @@ public class SocialPostAdapter extends FirebaseRecyclerAdapter<SocialPost, Socia
         return new socialPostViewHolder(view);
     }
 
+    @Override
+    public int getItemCount() {
+        return posts.size();
+    }
+
     /**
      * Binds XML (social_post_layout) to the required data from SocialPost class
      */
     @Override
-    public void onBindViewHolder(@NonNull socialPostViewHolder holder, int position, SocialPost post) {
+    public void onBindViewHolder(@NonNull socialPostViewHolder holder, int position) {
         // Add posts content to view in XML
+        SocialPost post = posts.get(position);
+
         holder.username.setText(post.getUsername());
         holder.content.setText(post.getContent());
         holder.username.setOnClickListener(new View.OnClickListener() {

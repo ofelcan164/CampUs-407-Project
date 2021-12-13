@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -94,6 +96,15 @@ public class SocialFeedFragment extends Fragment {
 
         sharedPreferences = getActivity().getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
+        // Set up recycler view
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView = (RecyclerView) v.findViewById(R.id.socialFeedRecycler);
+
+        linearLayoutManager.setReverseLayout(true); // Newest posts first
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         // Initialize posts
         posts = new ArrayList<>();
 
@@ -111,10 +122,13 @@ public class SocialFeedFragment extends Fragment {
                     loc.setLatitude(sp.getLat());
                     loc.setLongitude(sp.getLng());
 
-                    if (loc.distanceTo(userLoc) <= 100) { // TODO WHat threshold/radius
+                    if (loc.distanceTo(userLoc) <= 100000) { // TODO WHat threshold/radius
                         posts.add(sp);
                     }
                 }
+                Log.i("SIZE", "Size " + posts.size());
+                adapter = new SocialPostAdapter(posts);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -123,22 +137,13 @@ public class SocialFeedFragment extends Fragment {
             }
         });
 
-        // Set up recycler view
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView = (RecyclerView) v.findViewById(R.id.socialFeedRecycler);
-
-        linearLayoutManager.setReverseLayout(true); // Newest posts first
-        linearLayoutManager.setStackFromEnd(true);
-
-        recyclerView.setLayoutManager(linearLayoutManager);
-
         // Query of the database with FirebaseRecyclerOptions
         FirebaseRecyclerOptions<SocialPost> options = new FirebaseRecyclerOptions.Builder<SocialPost>()
                 .setQuery(mRef, SocialPost.class).build();
 
         // Connect the adapter
-        adapter = new SocialPostAdapter(options);
-        recyclerView.setAdapter(adapter);
+        //adapter = new SocialPostAdapter(posts);
+//        recyclerView.setAdapter(adapter);
 
         //Return fragment view
         return v;
@@ -150,7 +155,7 @@ public class SocialFeedFragment extends Fragment {
      */
     @Override public void onStart() {
         super.onStart();
-        adapter.startListening();
+//        adapter.startListening();
     }
 
     /**
@@ -159,6 +164,6 @@ public class SocialFeedFragment extends Fragment {
      */
     @Override public void onStop() {
         super.onStop();
-        adapter.stopListening();
+//        adapter.stopListening();
     }
 }
