@@ -314,15 +314,13 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
 
         // Update SharedPreferences based on location configuration
         if (sharedPreferences.getBoolean("use_cur_loc", false)) {
-
             // Update SharedPreferences user_lat and user_lng with current location
             if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 // Put locations
-                sharedPreferences.edit().putFloat("user_lat", (float)location.getLatitude()).apply();
-                sharedPreferences.edit().putFloat("user_lng", (float)location.getLongitude()).apply();
+                sharedPreferences.edit().putFloat("user_lat", (float) location.getLatitude()).apply();
+                sharedPreferences.edit().putFloat("user_lng", (float) location.getLongitude()).apply();
             }
         }
         else {
@@ -331,11 +329,14 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                 mRef.child(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        User user = task.getResult().getValue(User.class);
+                        DataSnapshot ds = task.getResult();
+                        if (ds != null) {
+                            User user = ds.getValue(User.class);
 
-                        // Add location to SharedPreferences
-                        sharedPreferences.edit().putFloat("user_lat", (float)user.getLat()).apply();
-                        sharedPreferences.edit().putFloat("user_lng", (float)user.getLng()).apply();
+                            // Add location to SharedPreferences
+                            sharedPreferences.edit().putFloat("user_lat", (float) user.getLat()).apply();
+                            sharedPreferences.edit().putFloat("user_lng", (float) user.getLng()).apply();
+                        }
                     }
                 });
             }
@@ -349,7 +350,6 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
      * Save current location to database for user
      */
     private void saveCurLocation() {
-        // TODO IF USER_CUR_LOC THEN DONT GET LOCATION AGAIN
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);

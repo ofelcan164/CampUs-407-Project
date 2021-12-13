@@ -208,7 +208,7 @@ public class ProfileFragment extends Fragment {
         sharedPreferences.edit().putBoolean("use_cur_loc", curLocationCheck.isChecked()).apply(); // Update the whether user is using current location
 
         // Update SharedPreferences based on location configuration
-        if (sharedPreferences.getBoolean("user_cur_loc", false)) {
+        if (sharedPreferences.getBoolean("use_cur_loc", false)) {
             // Update SharedPreferences user_lat and user_lng with current location
             if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -224,11 +224,14 @@ public class ProfileFragment extends Fragment {
                 mRef.child(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        User user = task.getResult().getValue(User.class);
+                        DataSnapshot ds = task.getResult();
+                        if (ds != null) {
+                            User user = ds.getValue(User.class);
 
-                        // Add location to SharedPreferences
-                        sharedPreferences.edit().putFloat("user_lat", (float)user.getLat()).apply();
-                        sharedPreferences.edit().putFloat("user_lng", (float)user.getLng()).apply();
+                            // Add location to SharedPreferences
+                            sharedPreferences.edit().putFloat("user_lat", (float) user.getLat()).apply();
+                            sharedPreferences.edit().putFloat("user_lng", (float) user.getLng()).apply();
+                        }
                     }
                 });
             }
