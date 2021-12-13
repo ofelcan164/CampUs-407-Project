@@ -2,10 +2,13 @@ package com.example.campus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, MarketPostAdapter.marketPostViewHolder> {
 
@@ -55,6 +62,10 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
                 context.startActivity(intent);
             }
         });
+
+        if (post.getPostID() != null) {
+            downloadAndSet(post.getPostID(), holder);
+        }
     }
 
     /**
@@ -65,6 +76,7 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
         TextView username;
         TextView number;
         TextView description;
+        ImageView image;
 
         /**
          * Constructor
@@ -76,6 +88,36 @@ public class MarketPostAdapter extends FirebaseRecyclerAdapter<MarketPost, Marke
             username = (TextView) itemView.findViewById(R.id.marketPostUsername);
             number = (TextView) itemView.findViewById(R.id.marketPostNumber);
             description = (TextView) itemView.findViewById(R.id.marketPostDescription);
+            image = (ImageView) itemView.findViewById(R.id.marketPostImage);
         }
+    }
+
+    public void downloadAndSet(String postID, MarketPostAdapter.marketPostViewHolder holder) {
+
+        String imagePath = "images/" + postID;
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageReference.child(imagePath);
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                if (bitmap.getHeight() != 600 && bitmap.getWidth() >= 600) {
+                    int y = ((bitmap.getHeight()) / 2) - 200;
+                    int x = ((bitmap.getWidth()) / 2) - 200;
+                    bitmap = Bitmap.createBitmap(bitmap, x, y, 400, 400);
+                    holder.image.setImageBitmap(bitmap);
+                } else {
+                    holder.image.setImageBitmap(bitmap);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("MarketPostAdapter", "Image Download failed -- " + imagePath);
+            }
+        });
     }
 }
