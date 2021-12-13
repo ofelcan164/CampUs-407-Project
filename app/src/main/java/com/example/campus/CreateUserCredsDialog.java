@@ -38,6 +38,9 @@ public class CreateUserCredsDialog extends AppCompatDialogFragment {
                         if (emailEditText.getText().toString() == null || emailEditText.getText().toString().equals("")) {
                             emailEditText.setError("Enter your email");
                             listener.saveCreds(null, null, null);
+                        } else if (!emailEditText.getText().toString().endsWith("wisc.edu")) {
+                            emailEditText.setError("Must be a wisc.edu email");
+                            listener.saveCreds(null, null, null);
                         } else if (passwordEnter.getText().toString() == null || passwordEnter.getText().toString().equals("")) {
                             passwordEnter.setError("Enter your password");
                             listener.saveCreds(emailEditText.getText().toString(), null, null);
