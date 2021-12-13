@@ -116,7 +116,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
                 // Post the post!
                 postID = postHelper.postSocial(post);
                 socialPostContent.setError(null);
-                upload(imageViewSocial, (photo) ? mAuth.getUid() : null);
+                upload(imageViewSocial, postID);
                 Intent intent = new Intent(CreateNewSocialPost.this, MainFeedsActivity.class);
                 intent.putExtra("select", "social");
                 startActivity(intent);
