@@ -157,8 +157,6 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
                         yearEditText.setText(user.getYear());
                         majorEditText.setText(user.getMajor());
                         phoneEditText.setText(user.getPhone());
-                        String userID = user.getUID();
-                        downloadAndSet(userID);
                         break;
                     }
                 }
@@ -168,6 +166,8 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+        downloadAndSet(mAuth.getUid());
 
         // Location services
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
