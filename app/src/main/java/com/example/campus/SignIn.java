@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -102,16 +104,22 @@ public class SignIn extends AppCompatActivity {
                         sharedPreferences.edit().putString("email", email).apply();
                         sharedPreferences.edit().putString("password", password).apply();
                         if (mAuth.getCurrentUser() != null) {
-                             mRef.child(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                    User user = task.getResult().getValue(User.class);
+                             mRef.equalTo(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                 @Override
+                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                     DataSnapshot ds = task.getResult();
+                                     User user = new User();
+                                     if (ds != null) {
+                                         user = ds.getValue(User.class);
+                                         // Add location to SharedPreferences
+                                         sharedPreferences.edit().putFloat("user_lat", (float)user.getLat()).apply();
+                                         sharedPreferences.edit().putFloat("user_lng", (float)user.getLng()).apply();
+                                         sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
+                                     } else {
+                                         Toast.makeText(getApplicationContext(), "Login Error", Toast.LENGTH_SHORT).show();
+                                     }
 
-                                    // Add location to SharedPreferences
-                                    sharedPreferences.edit().putFloat("user_lat", (float)user.getLat()).apply();
-                                    sharedPreferences.edit().putFloat("user_lng", (float)user.getLng()).apply();
-                                    sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
-                                }
+                                 }
                             });
                         }
 

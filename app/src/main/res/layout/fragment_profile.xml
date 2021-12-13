@@ -120,11 +120,10 @@
 
     <ImageView
         android:id="@+id/profile_pic"
-        android:scaleType="centerInside"
-        android:adjustViewBounds="true"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:background="@color/red_1"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
         android:src="@drawable/standin_profile_pic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

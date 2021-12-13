@@ -2,6 +2,7 @@ package com.example.campus;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -45,7 +46,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private ImageView imageViewSocial;
     private String postID;
-    private boolean photo;
+    private boolean photo = false;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -107,23 +108,21 @@ public class CreateNewSocialPost extends AppCompatActivity {
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 SocialPost post = new SocialPost(socialPostContent.getText().toString(),
                         mAuth.getCurrentUser().getDisplayName(),
-                        postID,
+                        (photo) ? mAuth.getUid() : null,
                         location.getLatitude(),
                         location.getLongitude(),
                         mAuth.getUid());
 
                 // Post the post!
-                postID = postHelper.postSocial(post);
+                postHelper.postSocial(post);
                 socialPostContent.setError(null);
-                if (photo) {
-                    upload(imageViewSocial, postID);
-                }
+                upload(imageViewSocial, (photo) ? mAuth.getUid() : null);
                 Intent intent = new Intent(CreateNewSocialPost.this, MainFeedsActivity.class);
                 intent.putExtra("select", "social");
                 startActivity(intent);
             }
             else {
-                Log.i("CreateSocial", "Location permissions denied.;");
+                Log.i("CreateNewSocial", "Location permissions denied.;");
             }
         }
         else {

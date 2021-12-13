@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 public class ProfileFragment extends Fragment {
@@ -128,7 +129,6 @@ public class ProfileFragment extends Fragment {
                         major.setText(user.getMajor());
                         phone.setText(user.getPhone());
                         userID = user.getUID();
-                        downloadAndSet(v, userID);
                         break;
                     }
                 }
@@ -138,6 +138,9 @@ public class ProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+        // Set profile photo (if there is one)
+        downloadAndSet(v, mAuth.getUid());
 
         // Location services
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -192,7 +195,7 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-
+  
     private void editProfileIconClicked() {
         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
         startActivity(intent);
