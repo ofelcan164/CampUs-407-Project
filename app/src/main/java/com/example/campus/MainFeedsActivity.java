@@ -13,7 +13,6 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,6 +58,8 @@ public class MainFeedsActivity extends AppCompatActivity {
     private static final String CHANNEL_3_ID = "channel3";
     private static final String CHANNEL_4_ID = "channel4";
     private static final String CHANNEL_5_ID = "channel5";
+
+    public static final int LOCATION_RADIUS = 200;
 
     /**
      * When permission for location services is requested
@@ -204,14 +205,12 @@ public class MainFeedsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show(); // TODO
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         };
 
         mRef.addValueEventListener(alertPostListener);
     }
-
-    // TODO SOME SORT OF ON STOP TO SAVE DB STUFF ESPECIALLY THE USER LOCATION -  DONT WANT THAT UPDATING CONSTANTLY
 
     private NavigationBarView.OnItemSelectedListener bottomnavFunction = new NavigationBarView.OnItemSelectedListener() {
         @Override

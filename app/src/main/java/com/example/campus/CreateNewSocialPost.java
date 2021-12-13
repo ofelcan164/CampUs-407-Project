@@ -1,36 +1,28 @@
 package com.example.campus;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.example.campus.databinding.ActivityMainFeedsBinding;
-import com.google.android.gms.tasks.OnFailureListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,7 +30,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.NoSuchElementException;
 
 public class CreateNewSocialPost extends AppCompatActivity {
 
@@ -47,6 +38,8 @@ public class CreateNewSocialPost extends AppCompatActivity {
     private ImageView imageViewSocial;
     private String postID;
     private boolean photo_added = false;
+
+    SharedPreferences sharedPreferences;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -66,6 +59,8 @@ public class CreateNewSocialPost extends AppCompatActivity {
 
         // Auth
         mAuth = FirebaseAuth.getInstance();
+
+        sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
         // Add photo button
         Button uploadPhotoBtn = (Button) findViewById(R.id.addPhotoSocial);
@@ -101,30 +96,22 @@ public class CreateNewSocialPost extends AppCompatActivity {
         EditText socialPostContent = (EditText) findViewById(R.id.newSocialPostContent);
         if (socialPostContent.getText().toString() != null && !socialPostContent.getText().toString().equals("")) {
             // Get post location
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            SocialPost post = new SocialPost(socialPostContent.getText().toString(),
+                    mAuth.getCurrentUser().getDisplayName(),
+                    postID,
+                    sharedPreferences.getFloat("user_lat", 0),
+                    sharedPreferences.getFloat("user_lng", 0),
+                    mAuth.getUid());
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                SocialPost post = new SocialPost(socialPostContent.getText().toString(),
-                        mAuth.getCurrentUser().getDisplayName(),
-                        postID,
-                        location.getLatitude(),
-                        location.getLongitude(),
-                        mAuth.getUid());
-
-                // Post the post!
-                postID = postHelper.postSocial(post);
-                socialPostContent.setError(null);
-                if (photo_added) {
-                    upload(imageViewSocial, postID);
-                }
-                Intent intent = new Intent(CreateNewSocialPost.this, MainFeedsActivity.class);
-                intent.putExtra("select", "social");
-                startActivity(intent);
+            // Post the post!
+            postID = postHelper.postSocial(post);
+            socialPostContent.setError(null);
+            if (photo_added) {
+                upload(imageViewSocial, postID);
             }
-            else {
-                Log.i("CreateNewSocial", "Location permissions denied.;");
-            }
+            Intent intent = new Intent(CreateNewSocialPost.this, MainFeedsActivity.class);
+            intent.putExtra("select", "social");
+            startActivity(intent);
         }
         else {
             socialPostContent.setError("Please enter you post's content");
