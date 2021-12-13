@@ -39,6 +39,8 @@ public class CreateNewMarketPost extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    private boolean photo_added = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +104,9 @@ public class CreateNewMarketPost extends AppCompatActivity {
                         salePostTitle.setError(null);
                         salePostPhone.setError(null);
                         salePostDescription.setError(null);
-                        upload(imageViewMarket, postID);
+                        if (photo_added) {
+                            upload(imageViewMarket, postID);
+                        }
                         Intent intent = new Intent(CreateNewMarketPost.this, MainFeedsActivity.class);
                         intent.putExtra("select", "market");
                         startActivity(intent);
@@ -122,6 +126,7 @@ public class CreateNewMarketPost extends AppCompatActivity {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             imageViewMarket.setImageURI(selectedImage);
+            photo_added = true;
         }
     }
 
