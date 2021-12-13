@@ -104,7 +104,7 @@ public class SignIn extends AppCompatActivity {
                         sharedPreferences.edit().putString("email", email).apply();
                         sharedPreferences.edit().putString("password", password).apply();
                         if (mAuth.getCurrentUser() != null) {
-                             mRef.equalTo(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                             mRef.child(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                  @Override
                                  public void onComplete(@NonNull Task<DataSnapshot> task) {
                                      DataSnapshot ds = task.getResult();
