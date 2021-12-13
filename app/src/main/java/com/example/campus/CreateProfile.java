@@ -157,9 +157,8 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         if (Build.VERSION.SDK_INT < 23) {
             startListening();
         } else {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Need location permissions", Toast.LENGTH_SHORT); // TODO
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Need location permissions", Toast.LENGTH_SHORT);
                 return;
             }
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -255,7 +254,13 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                                 Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
                             }
                         }
-                    });
+                    })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(CreateProfile.this, "Failed to create profile with given credentials", Toast.LENGTH_LONG);
+                }
+            });
         }
     }
 

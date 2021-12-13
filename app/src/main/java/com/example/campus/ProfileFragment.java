@@ -38,7 +38,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 public class ProfileFragment extends Fragment {
@@ -149,7 +148,7 @@ public class ProfileFragment extends Fragment {
             public void onLocationChanged(@NonNull Location location) {
             }
         };
-        // Prompt user for location permissions TODO
+        // Prompt user for location permissions
         if (Build.VERSION.SDK_INT < 23) {
             startListening();
         } else {

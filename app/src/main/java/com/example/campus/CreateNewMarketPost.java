@@ -1,13 +1,9 @@
 package com.example.campus;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -21,6 +17,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +41,7 @@ public class CreateNewMarketPost extends AppCompatActivity {
     private LocationListener locationListener;
 
     private boolean photo_added = false;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,8 @@ public class CreateNewMarketPost extends AppCompatActivity {
 
         // Auth
         mAuth = FirebaseAuth.getInstance();
+
+        sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
         // Add photo button
         Button uploadPhotoBtn = (Button) findViewById(R.id.addPhotoSale);
@@ -85,32 +89,28 @@ public class CreateNewMarketPost extends AppCompatActivity {
                 if (salePostTitle.getText().toString() != null && !salePostTitle.getText().toString().equals("")
                         && salePostPhone.getText().toString() != null && !salePostPhone.getText().toString().equals("")
                         && salePostDescription.getText().toString() != null && !salePostDescription.getText().toString().equals("")) {
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    MarketPost post = new MarketPost(salePostTitle.getText().toString(),
+                            salePostPhone.getText().toString(),
+                            salePostDescription.getText().toString(),
+                            mAuth.getCurrentUser().getDisplayName(),
+                            postID,
+                            sharedPreferences.getFloat("user_lat", 0),
+                            sharedPreferences.getFloat("user_lng", 0),
+                            mAuth.getUid());
 
-                        MarketPost post = new MarketPost(salePostTitle.getText().toString(),
-                                salePostPhone.getText().toString(),
-                                salePostDescription.getText().toString(),
-                                mAuth.getCurrentUser().getDisplayName(),
-                                postID,
-                                location.getLatitude(),
-                                location.getLongitude(),
-                                mAuth.getUid());
-
-                        // Post the post!
-                        postID = postHelper.postMarket(post);
-                        salePostTitle.setError(null);
-                        salePostPhone.setError(null);
-                        salePostDescription.setError(null);
-                        if (photo_added) {
-                            upload(imageViewMarket, postID);
-                        }
-                        Intent intent = new Intent(CreateNewMarketPost.this, MainFeedsActivity.class);
-                        intent.putExtra("select", "market");
-                        startActivity(intent);
+                    // Post the post!
+                    postID = postHelper.postMarket(post);
+                    salePostTitle.setError(null);
+                    salePostPhone.setError(null);
+                    salePostDescription.setError(null);
+                    if (photo_added) {
+                        upload(imageViewMarket, postID);
                     }
+                    Intent intent = new Intent(CreateNewMarketPost.this, MainFeedsActivity.class);
+                    intent.putExtra("select", "market");
+                    startActivity(intent);
+
                 } else {
                     salePostTitle.setError("Please enter you post's title");
                     salePostPhone.setError("Please enter your phone number");

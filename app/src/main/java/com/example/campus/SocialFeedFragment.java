@@ -20,12 +20,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -122,7 +120,7 @@ public class SocialFeedFragment extends Fragment {
                     loc.setLatitude(sp.getLat());
                     loc.setLongitude(sp.getLng());
 
-                    if (loc.distanceTo(userLoc) <= 100000) { // TODO WHat threshold/radius
+                    if (loc.distanceTo(userLoc) <= MainFeedsActivity.LOCATION_RADIUS) {
                         posts.add(sp);
                     }
                 }
@@ -133,7 +131,7 @@ public class SocialFeedFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show(); // TODO
+                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
         //Return fragment view

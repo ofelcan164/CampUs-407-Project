@@ -176,7 +176,7 @@ public class EditProfileActivity extends AppCompatActivity implements EditUserCr
             public void onLocationChanged(@NonNull Location location) {
             }
         };
-        // Prompt user for location permissions TODO
+        // Prompt user for location permissions
         if (Build.VERSION.SDK_INT < 23) {
             startListening();
         } else {
