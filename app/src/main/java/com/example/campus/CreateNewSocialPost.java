@@ -46,7 +46,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private ImageView imageViewSocial;
     private String postID;
-    private boolean photo = false;
+    private boolean photo_added = false;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -74,7 +74,6 @@ public class CreateNewSocialPost extends AppCompatActivity {
             public void onClick(View v) {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-                photo = true; // TODO THIS SHOULDN'T EVEN BE SET LIKE THIS CANT ASSUME USER ACTUALLY PICKED A PHOTO
             }
         });
 
@@ -116,7 +115,9 @@ public class CreateNewSocialPost extends AppCompatActivity {
                 // Post the post!
                 postID = postHelper.postSocial(post);
                 socialPostContent.setError(null);
-                upload(imageViewSocial, postID);
+                if (photo_added) {
+                    upload(imageViewSocial, postID);
+                }
                 Intent intent = new Intent(CreateNewSocialPost.this, MainFeedsActivity.class);
                 intent.putExtra("select", "social");
                 startActivity(intent);
@@ -136,6 +137,7 @@ public class CreateNewSocialPost extends AppCompatActivity {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             imageViewSocial.setImageURI(selectedImage);
+            photo_added = true;
         }
     }
 
