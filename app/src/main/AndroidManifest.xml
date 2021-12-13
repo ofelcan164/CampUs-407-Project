@@ -34,7 +34,7 @@
         <activity
             android:name=".MainFeedsActivity"
             android:exported="false"
-            android:label="CampUs" />
+            android:label="@string/app_name" />
         <activity
             android:name=".CreateProfile"
             android:exported="false" />
