@@ -56,6 +56,8 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
 
+    private boolean photo_added = false;
+
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -104,6 +106,12 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                 if (username == null || username.getText().toString().equals("")) {
                     username.setError("Please enter a valid username");
                 } else {
+                    // Request permissions if necessary
+                    if (ContextCompat.checkSelfPermission(CreateProfile.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(CreateProfile.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    } else {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                    }
                     Register();
                 }
             }
@@ -111,34 +119,6 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
 
         sharedPreferences = getSharedPreferences("com.example.campus", Context.MODE_PRIVATE);
 
-        try {
-            addProfilePictureImageView.setDrawingCacheEnabled(true);
-            addProfilePictureImageView.buildDrawingCache();
-            Bitmap bitmap = addProfilePictureImageView.getDrawingCache();
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] socialPhotoByteStream = baos.toByteArray();
-
-            String baseFolder = "profilePictures/";
-            String imageFilePath = baseFolder + mAuth.getUid();
-
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference imageRef = storageRef.child(imageFilePath);
-
-            UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("Error", "Image upload failed. Error:" + e);
-        }
-      
         // Set up location services
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -157,6 +137,7 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             addProfilePictureImageView.setImageURI(selectedImage);
+            photo_added = true;
         }
     }
 
@@ -176,73 +157,105 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         if (Build.VERSION.SDK_INT < 23) {
             startListening();
         } else {
-            // Request permissions if necessary
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            } else {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                // Validate user-inputted credentials
-                if (emailFromDialog == null) {
-                    Toast.makeText(getApplicationContext(), "Must enter a wisc.edu email", Toast.LENGTH_SHORT).show();
-                    openCredsDialog();
-                    return;
-                } else if (passwordFromDialog1 == null || passwordFromDialog2 == null) {
-                    Toast.makeText(getApplicationContext(), "Must enter and confirm a valid password [6 characters or more]", Toast.LENGTH_LONG).show();
-                    openCredsDialog();
-                    return;
-                }
-
-                // Get user info
-                String username = ((EditText) findViewById(R.id.username_edit_create)).getText().toString();
-                String year = ((EditText) findViewById(R.id.year_edit_create)).getText().toString();
-                String major = ((EditText) findViewById(R.id.major_edit_create)).getText().toString();
-                String phone = ((EditText) findViewById(R.id.phone_edit_create)).getText().toString();
-
-                NewUserHelper userHelper = new NewUserHelper();
-
-                // Valid user, register with Firebase Authentication
-                mAuth.createUserWithEmailAndPassword(emailFromDialog, passwordFromDialog1)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    sharedPreferences.edit().putString("email", emailFromDialog).apply();
-                                    sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
-                                    sharedPreferences.edit().putFloat("user_lat", (float)location.getLatitude()).apply();
-                                    sharedPreferences.edit().putFloat("user_lng", (float)location.getLongitude()).apply();
-                                    sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
-                                    sharedPreferences.edit().putInt("urgency_thres", 1).apply();
-
-                                    // Save username as DisplayName
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(username)
-                                            .build();
-                                    FirebaseUser curUser = mAuth.getCurrentUser();
-                                    curUser.updateProfile(profileUpdates);
-                                    // Save all user info
-                                    userHelper.saveUser(new User(username,
-                                            passwordFromDialog1,
-                                            emailFromDialog,
-                                            phone,
-                                            year,
-                                            major,
-                                            location.getLatitude(),
-                                            location.getLongitude(),
-                                            curUser.getUid()));
-
-                                    // Get user signed in properly and then start the main feed
-                                    mAuth.signOut();
-                                    mAuth.signInWithEmailAndPassword(emailFromDialog, passwordFromDialog1);
-                                    Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
-                                } else {
-                                    Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Need location permissions", Toast.LENGTH_SHORT); // TODO
+                return;
             }
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            // Validate user-inputted credentials
+            if (emailFromDialog == null) {
+                Toast.makeText(getApplicationContext(), "Must enter a wisc.edu email", Toast.LENGTH_SHORT).show();
+                openCredsDialog();
+                return;
+            } else if (passwordFromDialog1 == null || passwordFromDialog2 == null) {
+                Toast.makeText(getApplicationContext(), "Must enter and confirm a valid password [6 characters or more]", Toast.LENGTH_LONG).show();
+                openCredsDialog();
+                return;
+            }
+
+            // Get user info
+            String username = ((EditText) findViewById(R.id.username_edit_create)).getText().toString();
+            String year = ((EditText) findViewById(R.id.year_edit_create)).getText().toString();
+            String major = ((EditText) findViewById(R.id.major_edit_create)).getText().toString();
+            String phone = ((EditText) findViewById(R.id.phone_edit_create)).getText().toString();
+
+            NewUserHelper userHelper = new NewUserHelper();
+
+            // Valid user, register with Firebase Authentication
+            mAuth.createUserWithEmailAndPassword(emailFromDialog, passwordFromDialog1)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                sharedPreferences.edit().putString("email", emailFromDialog).apply();
+                                sharedPreferences.edit().putString("password", passwordFromDialog1).apply();
+                                sharedPreferences.edit().putFloat("user_lat", (float) location.getLatitude()).apply();
+                                sharedPreferences.edit().putFloat("user_lng", (float) location.getLongitude()).apply();
+                                sharedPreferences.edit().putBoolean("use_cur_loc", false).apply();
+                                sharedPreferences.edit().putInt("urgency_thres", 1).apply();
+
+                                // Save username as DisplayName
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(username)
+                                        .build();
+                                FirebaseUser curUser = mAuth.getCurrentUser();
+                                curUser.updateProfile(profileUpdates);
+                                // Save all user info
+                                userHelper.saveUser(new User(username,
+                                        passwordFromDialog1,
+                                        emailFromDialog,
+                                        phone,
+                                        year,
+                                        major,
+                                        location.getLatitude(),
+                                        location.getLongitude(),
+                                        curUser.getUid()));
+
+                                Toast.makeText(CreateProfile.this, "Successfully registered your profile", Toast.LENGTH_LONG).show();
+
+                                // Upload profile photo
+                                // Upload photo to Firebase
+                                try {
+                                    if (photo_added) {
+                                        addProfilePictureImageView.setDrawingCacheEnabled(true);
+                                        addProfilePictureImageView.buildDrawingCache();
+                                        Bitmap bitmap = addProfilePictureImageView.getDrawingCache();
+
+                                        if (bitmap != null) {
+
+                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                            byte[] socialPhotoByteStream = baos.toByteArray();
+
+                                            String baseFolder = "profilePictures/";
+                                            String imageFilePath = baseFolder + mAuth.getUid();
+                                            Log.i("CreateProgile", mAuth.getUid());
+
+                                            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                            StorageReference imageRef = storageRef.child(imageFilePath);
+
+                                            UploadTask uploadTask = imageRef.putBytes(socialPhotoByteStream);
+                                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    Log.i("ImageUpload", "Image successfully uploaded to Firebase.");
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Log.i("Error", "Image upload failed. Error:" + e);
+                                }
+                                startActivity(new Intent(CreateProfile.this, MainFeedsActivity.class));
+                            } else {
+                                Toast.makeText(CreateProfile.this, "Registration failed", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
         }
     }
 

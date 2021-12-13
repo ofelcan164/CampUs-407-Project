@@ -108,15 +108,15 @@ public class CreateNewSocialPost extends AppCompatActivity {
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 SocialPost post = new SocialPost(socialPostContent.getText().toString(),
                         mAuth.getCurrentUser().getDisplayName(),
-                        (photo) ? mAuth.getUid() : null,
+                        postID,
                         location.getLatitude(),
                         location.getLongitude(),
                         mAuth.getUid());
 
                 // Post the post!
-                postHelper.postSocial(post);
+                postID = postHelper.postSocial(post);
                 socialPostContent.setError(null);
-                upload(imageViewSocial, (photo) ? mAuth.getUid() : null);
+                upload(imageViewSocial, postID);
                 Intent intent = new Intent(CreateNewSocialPost.this, MainFeedsActivity.class);
                 intent.putExtra("select", "social");
                 startActivity(intent);

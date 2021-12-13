@@ -30,17 +30,23 @@ public class NewPostHelper {
     /**
      * Save a new social post to Database
      */
-    public void postSocial(SocialPost post) {
-        // Add post to users posts
-        mRef.child("posts").child("social").push().setValue(post); // push() creates guaranteed unique ID for post
+    public String postSocial(SocialPost post) {
+        DatabaseReference newRef = mRef.child("posts").child("social").push();// push() creates guaranteed unique ID for post
+        String key = newRef.getKey();
+        post.setPostID(key);
+        newRef.setValue(post);
+        return key;
     }
 
     /**
      * Save a new market post to Database
      */
-    public void postMarket(MarketPost post) {
-        // Add post to users posts
-        mRef.child("posts").child("market").push().setValue(post); // push() creates guaranteed unique ID for post
+    public String postMarket(MarketPost post) {
+        DatabaseReference newRef = mRef.child("posts").child("market").push();
+        String key = newRef.getKey();
+        post.setPostID(key);
+        newRef.setValue(post); // push() creates guaranteed unique ID for post
+        return key;
     }
 
     /**
