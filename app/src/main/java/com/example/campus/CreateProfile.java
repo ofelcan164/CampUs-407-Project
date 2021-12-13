@@ -56,6 +56,8 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
 
+    private boolean photo_added = false;
+
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -135,6 +137,7 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             addProfilePictureImageView.setImageURI(selectedImage);
+            photo_added = true;
         }
     }
 
@@ -215,7 +218,7 @@ public class CreateProfile extends AppCompatActivity implements CreateUserCredsD
                                 // Upload profile photo
                                 // Upload photo to Firebase
                                 try {
-                                    if (addProfilePictureImageView.getDrawable() != null) {
+                                    if (photo_added) {
                                         addProfilePictureImageView.setDrawingCacheEnabled(true);
                                         addProfilePictureImageView.buildDrawingCache();
                                         Bitmap bitmap = addProfilePictureImageView.getDrawingCache();
